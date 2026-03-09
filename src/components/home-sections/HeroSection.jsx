@@ -3,8 +3,8 @@ import heroImage from "../../assets/images/Hero__4_.png";
 
 const HeroSection = () => {
   return (
-    <section className="w-full px-10 pt-10 pb-20">
-      <div className="mx-auto grid max-w-[1500px] items-center gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+    <section className="w-full px-5 md:px-10 pt-10 pb-12 md:pb-20">
+      <div className="mx-auto grid max-w-[1500px] items-center gap-6 grid-cols-1 lg:grid-cols-[1.05fr_0.95fr]">
         {/* Left side */}
         <div className="flex justify-start">
           <div className="w-full max-w-[680px]">
@@ -20,27 +20,27 @@ const HeroSection = () => {
         </div>
 
         {/* Right side */}
-        <div className="max-w-[560px]">
-          <h1 className="text-[72px] font-normal tracking-[-0.04em] leading-[1.02] text-black">
+        <div className="max-w-[560px] order-first lg:order-none mb-8 lg:mb-0">
+          <h1 className="text-[42px] md:text-[54px] lg:text-[72px] font-normal tracking-[-0.04em] leading-[1.02] text-black">
             The future of
-            <br />
+            <br className="hidden md:block" />
             finance is here.
           </h1>
 
-          <p className="mt-7 text-[22px] leading-[1.35] text-black">
+          <p className="mt-4 md:mt-7 text-[18px] md:text-[22px] leading-[1.35] text-black">
             Trade crypto and more on a platform you can trust.
           </p>
 
-          <div className="mt-7 flex max-w-[620px] items-center gap-4">
+          <div className="mt-6 md:mt-7 flex flex-col sm:flex-row max-w-[620px] items-center gap-4">
             <input
               type="email"
               placeholder="satoshi@nakamoto.com"
-              className="h-[54px] flex-1 rounded-xl border border-[#cfd3d8] px-4 text-[18px] text-[#5b616e] outline-none"
+              className="h-[54px] w-full sm:flex-1 rounded-xl border border-[#cfd3d8] px-4 text-[16px] md:text-[18px] text-[#5b616e] outline-none"
             />
 
             <Link 
               to="/signup"
-              className="flex items-center h-[54px] rounded-full bg-[#1652f0] px-9 text-[18px] font-semibold text-white hover:bg-[#1448d8] transition-colors"
+              className="flex items-center justify-center h-[54px] w-full sm:w-auto rounded-full bg-[#1652f0] px-9 text-[16px] md:text-[18px] font-semibold text-white hover:bg-[#1448d8] transition-colors"
             >
               Sign up
             </Link>

@@ -61,7 +61,7 @@ function Learn() {
 
   return (
     <div className="bg-white">
-      <div className="mx-auto max-w-[1260px]">
+      <div className="mx-auto px-5 lg:px-0 max-w-[1260px]">
         <LearnHero 
           title="Crypto questions, answered"
           description="Beginner guides, practical tips, and market updates for first-timers, experienced investors, and everyone in between"
@@ -109,9 +109,9 @@ function Learn() {
 
       <WhatIsGrid terms={terms} />
 
-      <div className="mx-auto max-w-[1260px]">
+      <div className="mx-auto px-5 lg:px-0 max-w-[1260px]">
         {/* TIPS AND TUTORIALS - Special 2x2 Layout */}
-        <section className="border-t border-[#e5e7eb] px-10 py-[106px]">
+        <section className="border-t border-[#e5e7eb] px-0 lg:px-10 py-[60px] md:py-[106px]">
           <div className="mx-auto max-w-[1100px]">
             <SectionHeader 
               title="Tips and tutorials" 
@@ -133,7 +133,7 @@ function Learn() {
         </section>
 
         {/* ADVANCED TRADING - Special 2x2 Layout */}
-        <section className="border-t border-[#e5e7eb] px-10 py-[106px]">
+        <section className="border-t border-[#e5e7eb] px-0 lg:px-10 py-[60px] md:py-[106px]">
           <div className="mx-auto max-w-[1100px]">
             <SectionHeader 
               title="Advanced trading" 
@@ -155,7 +155,7 @@ function Learn() {
         </section>
 
         {/* FUTURES - Special 2x2 Layout */}
-        <section className="border-t border-[#e5e7eb] px-10 py-[106px]">
+        <section className="border-t border-[#e5e7eb] px-0 lg:px-10 py-[60px] md:py-[106px]">
           <div className="mx-auto max-w-[1100px]">
             <SectionHeader 
               title="Futures" 
@@ -177,7 +177,7 @@ function Learn() {
         </section>
 
         {/* ALL THINGS WALLET */}
-        <section className="border-t border-[#e5e7eb] px-10 py-[106px]">
+        <section className="border-t border-[#e5e7eb] px-0 lg:px-10 py-[60px] md:py-[106px]">
           <div className="mx-auto max-w-[1100px]">
             <SectionHeader 
               title="All Things Wallet" 

@@ -3,13 +3,13 @@ import Button from '../ui/Button';
 
 const WhatIsGrid = ({ terms, to }) => {
   return (
-    <section className="bg-[#f4f6f8] px-10 py-[106px]">
+    <section className="bg-[#f4f6f8] px-5 md:px-10 py-[60px] md:py-[106px]">
       <div className="mx-auto max-w-[1430px] text-center">
-        <h2 className="text-[53px] font-semibold tracking-[-0.02em] text-black">
+        <h2 className="text-[36px] md:text-[53px] font-semibold tracking-[-0.02em] text-black">
           What is...
         </h2>
 
-        <div className="mx-auto mt-[62px] grid max-w-[1430px] grid-cols-2 gap-[16px] md:grid-cols-4 lg:grid-cols-8">
+        <div className="mx-auto mt-[40px] md:mt-[62px] grid max-w-[1430px] grid-cols-2 gap-[12px] md:gap-[16px] md:grid-cols-4 lg:grid-cols-8">
           {terms.map((term) => (
             <button
               key={term}

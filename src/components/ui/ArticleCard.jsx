@@ -11,7 +11,7 @@ const ArticleCard = ({
 }) => {
   return (
     <div className={featured ? "group cursor-pointer" : "cursor-pointer"}>
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden rounded-xl">
         <img
           src={image}
           alt={title}
@@ -27,17 +27,17 @@ const ArticleCard = ({
       </div>
 
       {tag && (
-        <p className={`mt-[18px] text-[12px] font-semibold tracking-wider text-[#6b7280]`}>
+        <p className={`mt-[14px] md:mt-[18px] text-[11px] md:text-[12px] font-semibold tracking-wider text-[#6b7280]`}>
           {tag}
         </p>
       )}
 
-      <h3 className={`${featured ? "mt-[18px] text-[31px]" : "mt-2 text-[26px]"} font-semibold leading-[1.3] text-black`}>
+      <h3 className={`${featured ? "mt-[14px] md:mt-[18px] text-[24px] md:text-[31px]" : "mt-2 text-[20px] md:text-[26px]"} font-semibold leading-[1.3] text-black`}>
         {title}
       </h3>
 
       {description && (
-        <p className="mt-[22px] max-w-[650px] text-[18px] leading-[1.5] text-[#5b616e]">
+        <p className="mt-[14px] md:mt-[22px] max-w-[650px] text-[16px] md:text-[18px] leading-[1.5] text-[#5b616e]">
           {description}
         </p>
       )}

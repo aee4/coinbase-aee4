@@ -14,14 +14,14 @@ const LearnContentSection = ({
   topBorder = true
 }) => {
   return (
-    <section className={`${topBorder ? 'border-t border-[#e5e7eb]' : ''} ${background === 'gray' ? 'bg-[#f4f6f8]' : 'bg-white'} px-10 py-[106px]`}>
+    <section className={`${topBorder ? 'border-t border-[#e5e7eb]' : ''} ${background === 'gray' ? 'bg-[#f4f6f8]' : 'bg-white'} px-5 md:px-10 py-[60px] md:py-[106px]`}>
       <div className="mx-auto max-w-[1430px]">
         {/* Header */}
         <SectionHeader title={title} description={description} />
 
         {/* Featured Row (2 columns) */}
         {featuredArticles.length > 0 && (
-          <div className="mt-[70px] grid grid-cols-1 gap-[53px] lg:grid-cols-2">
+          <div className="mt-[40px] md:mt-[70px] grid grid-cols-1 gap-[35px] md:gap-[53px] lg:grid-cols-2">
             {featuredArticles.map((article, index) => (
               <ArticleCard 
                 key={index}
@@ -29,7 +29,7 @@ const LearnContentSection = ({
                 tag={article.tag}
                 title={article.title}
                 description={article.description}
-                imageHeight="h-[330px]"
+                imageHeight="h-[200px] md:h-[330px]"
               />
             ))}
           </div>
@@ -37,7 +37,7 @@ const LearnContentSection = ({
 
         {/* Grid Row (up to 4 columns) */}
         {gridArticles.length > 0 && (
-          <div className="mt-[62px] grid grid-cols-1 gap-[35px] md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-[40px] md:mt-[62px] grid grid-cols-1 gap-[35px] md:grid-cols-2 lg:grid-cols-4">
             {gridArticles.map((article, index) => (
               <ArticleCard 
                 key={index}
@@ -45,7 +45,7 @@ const LearnContentSection = ({
                 tag={article.tag}
                 title={article.title}
                 description={article.description} // Should be empty/undefined for small cards in most cases
-                imageHeight="h-[300px]"
+                imageHeight="h-[180px] md:h-[300px]"
                 video={article.video}
               />
             ))}

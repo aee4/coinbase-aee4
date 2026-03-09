@@ -166,7 +166,7 @@ function MegaMenu({ menu }) {
 
     return (
         <div className="absolute left-0 top-full z-50 w-full border-t border-gray-100 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
-            <div className="mx-auto grid max-w-[1240px] gap-8 px-8 py-10 lg:grid-cols-[1fr_1fr_1.5fr]">
+            <div className="mx-auto grid max-w-[1240px] gap-8 px-4 md:px-8 py-10 lg:grid-cols-[1fr_1fr_1.5fr]">
                 {menu.columns.map((column, colIndex) => (
                     <div key={colIndex} className="space-y-1">
                         {column.map((item, idx) => {
@@ -262,7 +262,7 @@ function Navbar() {
             onMouseLeave={() => setActiveMenu(null)}
         >
 
-            <div className="w-full px-10 h-full flex items-center justify-between">
+            <div className="w-full px-4 lg:px-10 h-full flex items-center justify-between">
 
                 {/* LEFT SIDE */}
                 <div className="flex items-center gap-12">
@@ -315,7 +315,7 @@ function Navbar() {
                     {/* Sign in */}
                     <Link
                         to="/signin"
-                        className="px-5 py-2.5 rounded-full bg-gray-100 text-base font-bold hover:bg-gray-200"
+                        className="hidden sm:block px-5 py-2.5 rounded-full bg-gray-100 text-base font-bold hover:bg-gray-200"
                     >
                         Sign in
                     </Link>
@@ -323,7 +323,7 @@ function Navbar() {
                     {/* Sign up */}
                     <Link
                         to="/signup"
-                        className="px-6 py-2.5 rounded-full bg-blue-600 text-white text-base font-bold hover:bg-blue-700 transition-all active:scale-95"
+                        className="px-4 md:px-6 py-2 md:py-2.5 rounded-full bg-blue-600 text-white text-sm md:text-base font-bold hover:bg-blue-700 transition-all active:scale-95"
                     >
                         Sign up
                     </Link>

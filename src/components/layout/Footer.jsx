@@ -38,7 +38,7 @@ function Footer() {
 
     return (
         <footer className="mt-0 border-t border-gray-200 bg-white">
-            <div className={`mx-auto w-full max-w-7xl px-14 pt-20 ${isLearnPage ? "pb-0" : "pb-20"}`}>
+            <div className={`mx-auto w-full max-w-7xl px-6 md:px-14 pt-12 md:pt-20 ${isLearnPage ? "pb-0" : "pb-12 md:pb-20"}`}>
 
                 {/* Main Footer */}
                 <div className="grid grid-cols-1 lg:grid-cols-[160px_1fr] gap-14">
