@@ -1,20 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/icons/coinbase-logo.svg";
 import { User, Briefcase, Code, Check } from "lucide-react";
-import LoadingScreen from "../components/common/LoadingScreen";
 
 function SignUpType() {
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedType, setSelectedType] = useState("personal");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleSelectType = (id) => {
     setSelectedType(id);
@@ -44,10 +35,6 @@ function SignUpType() {
       icon: <Code size={24} className="text-blue-600" />,
     },
   ];
-
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
 
   return (
     <div className="min-h-screen bg-white font-sans text-black">

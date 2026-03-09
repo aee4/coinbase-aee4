@@ -3,18 +3,18 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const TopMovers = ({ topMovers, scrollRef, onScroll }) => {
   return (
-    <div className="px-10 py-12">
+    <div className="px-6 md:px-10 py-8 md:py-12">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-[25px] font-semibold tracking-[-0.02em] text-black">
+          <h3 className="text-[20px] md:text-[25px] font-semibold tracking-[-0.02em] text-black">
             Top movers
           </h3>
-          <p className="mt-4 text-[13px] text-[#5b616e]">
+          <p className="mt-2 md:mt-4 text-[13px] text-[#5b616e]">
             24hr change
           </p>
         </div>
 
-        <div className="flex items-center gap-7 pt-1 text-black">
+        <div className="flex items-center gap-4 md:gap-7 pt-1 text-black">
           <button type="button" onClick={() => onScroll(scrollRef, "left")}>
             <ArrowLeft size={24} />
           </button>
@@ -26,12 +26,12 @@ const TopMovers = ({ topMovers, scrollRef, onScroll }) => {
 
       <div 
         ref={scrollRef}
-        className="mt-7 flex overflow-x-hidden scroll-smooth gap-5 pb-2"
+        className="mt-5 md:mt-7 flex overflow-x-auto scroll-smooth gap-4 md:gap-5 pb-2"
       >
         {topMovers.map((mover) => (
           <div
             key={mover.symbol}
-            className="min-w-[170px] rounded-[24px] bg-[#f1f3f5] px-5 py-5"
+            className="min-w-[150px] md:min-w-[170px] rounded-[20px] md:rounded-[24px] bg-[#f1f3f5] px-4 md:px-5 py-4 md:py-5 shrink-0"
           >
             <div
               className={`flex h-10 w-10 items-center justify-center rounded-xl ${mover.logoBg}`}
@@ -45,17 +45,17 @@ const TopMovers = ({ topMovers, scrollRef, onScroll }) => {
               )}
             </div>
 
-            <p className="mt-7 text-[13px] text-[#6b7280]">
+            <p className="mt-5 md:mt-7 text-[13px] text-[#6b7280]">
               {mover.symbol}
             </p>
 
             <p
-              className={`mt-2 text-[15px] font-medium ${mover.changeColor}`}
+              className={`mt-1 md:mt-2 text-[14px] md:text-[15px] font-medium ${mover.changeColor}`}
             >
               {mover.change}
             </p>
 
-            <p className="mt-2 text-[13px] text-black">
+            <p className="mt-1 md:mt-2 text-[13px] text-black">
               {mover.price}
             </p>
           </div>

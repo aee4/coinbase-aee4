@@ -1,6 +1,6 @@
 const DisclaimerSection = () => {
   return (
-    <section className="w-full bg-white px-10 pb-20">
+    <section className="w-full bg-white px-6 md:px-10 pb-20">
       <div className="mx-auto max-w-[1100px] text-center">
         <p className="text-[14px] text-[#5b616e]">
           DEX trading is offered by Coinbase Bermuda Technologies Ltd.

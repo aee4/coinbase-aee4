@@ -38,18 +38,34 @@ function Footer() {
 
     return (
         <footer className="mt-0 border-t border-gray-200 bg-white">
-            <div className={`mx-auto w-full max-w-7xl px-6 md:px-14 pt-12 md:pt-20 ${isLearnPage ? "pb-0" : "pb-12 md:pb-20"}`}>
+            <div className={`mx-auto w-full max-w-7xl px-6 md:px-14 pt-16 md:pt-20 ${isLearnPage ? "pb-0" : "pb-12 md:pb-20"}`}>
 
                 {/* Main Footer */}
-                <div className="grid grid-cols-1 lg:grid-cols-[160px_1fr] gap-14">
+                <div className="grid grid-cols-1 lg:grid-cols-[160px_1fr] gap-10 md:gap-14">
 
-                    {/* Logo */}
-                    <div className="pt-1">
-                        <img src={logo} alt="Coinbase" className="h-14 w-auto" />
+                    {/* Logo & Social Icons (Mobile) */}
+                    <div className="pt-1 flex flex-col items-start gap-8 lg:block lg:gap-0 lg:pt-1">
+                        <img src={logo} alt="Coinbase" className="h-10 md:h-14 w-auto" loading="lazy" />
+                        
+                        {/* Mobile Social Icons - Hidden on Desktop */}
+                        <div className="flex lg:hidden items-center gap-6">
+                            <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                                <img src={xLight} alt="X" className="h-[14px] w-auto" loading="lazy" />
+                            </a>
+                            <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                                <img src={linkedinLight} alt="LinkedIn" className="h-[14px] w-auto" loading="lazy" />
+                            </a>
+                            <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                                <img src={instagramLight} alt="Instagram" className="h-[14px] w-auto" loading="lazy" />
+                            </a>
+                            <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                                <img src={tiktokLight} alt="TikTok" className="h-[14px] w-auto" loading="lazy" />
+                            </a>
+                        </div>
                     </div>
 
                     {/* Footer Columns */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10 max-w-6xl">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10 max-w-6xl">
 
                         {footerColumns.map((column, index) => (
                             <div key={index}>
@@ -67,31 +83,31 @@ function Footer() {
 
                 </div>
 
-                {/* Social Icons */}
-                <div className="mt-8 mb-6 flex items-center gap-8">
+                {/* Desktop Social Icons - Hidden on Mobile */}
+                <div className="hidden lg:flex mt-8 mb-6 items-center gap-8">
                     <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
-                        <img src={xLight} alt="X" className="h-[14px] w-auto" />
+                        <img src={xLight} alt="X" className="h-[14px] w-auto" loading="lazy" />
                     </a>
                     <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
-                        <img src={linkedinLight} alt="LinkedIn" className="h-[14px] w-auto" />
+                        <img src={linkedinLight} alt="LinkedIn" className="h-[14px] w-auto" loading="lazy" />
                     </a>
                     <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
-                        <img src={instagramLight} alt="Instagram" className="h-[14px] w-auto" />
+                        <img src={instagramLight} alt="Instagram" className="h-[14px] w-auto" loading="lazy" />
                     </a>
                     <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
-                        <img src={tiktokLight} alt="TikTok" className="h-[14px] w-auto" />
+                        <img src={tiktokLight} alt="TikTok" className="h-[14px] w-auto" loading="lazy" />
                     </a>
                 </div>
 
                 {/* Bottom Bar: Copyright & Language */}
-                <div className="border-t border-gray-200 pt-8 flex items-center justify-between">
+                <div className="border-t border-gray-200 mt-8 lg:mt-0 pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-0">
 
                     {/* Copyright */}
-                    <div className="text-sm text-gray-600">
-                        © 2026 Coinbase
-                        <span className="mx-2">•</span>
+                    <div className="text-sm text-gray-600 flex flex-wrap items-center gap-2">
+                        <span>© 2026 Coinbase</span>
+                        <span className="hidden sm:inline">•</span>
                         <a href="#" className="hover:text-black">Privacy</a>
-                        <span className="mx-2">•</span>
+                        <span className="hidden sm:inline">•</span>
                         <a href="#" className="hover:text-black">Terms &amp; Conditions</a>
                     </div>
 
@@ -106,23 +122,23 @@ function Footer() {
 
                 {/* Absolute Bottom: Legal Disclaimer + Download App (ONLY ON LEARN PAGE) */}
                 {isLearnPage && (
-                    <div className="mt-8 grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-10 items-start border-t border-gray-200 pt-8">
+                    <div className="mt-8 grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-8 md:gap-10 items-start border-t border-gray-200 pt-8">
 
                         {/* Left: Download the App */}
                         <div>
-                            <img src={downloadApp} alt="Download the App" className="h-[18px] w-auto mb-4" />
-                            <div className="flex flex-col gap-4">
+                            <img src={downloadApp} alt="Download the App" className="h-[18px] w-auto mb-4" loading="lazy" />
+                            <div className="flex flex-row lg:flex-col gap-4">
                                 <a href="#">
-                                    <img src={googlePlay} alt="Get it on Google Play" className="h-[30px] w-auto rounded-[6px]" />
+                                    <img src={googlePlay} alt="Get it on Google Play" className="h-[30px] md:h-[35px] w-auto rounded-[6px]" loading="lazy" />
                                 </a>
                                 <a href="#">
-                                    <img src={appStore} alt="Download on the App Store" className="h-[30px] w-auto rounded-[6px]" />
+                                    <img src={appStore} alt="Download on the App Store" className="h-[30px] md:h-[35px] w-auto rounded-[6px]" loading="lazy" />
                                 </a>
                             </div>
                         </div>
 
                         {/* Right: Legal Disclaimer */}
-                        <p className="text-[13px] leading-[1.6] text-gray-500">
+                        <p className="text-[12px] md:text-[13px] leading-[1.6] text-gray-500">
                             Information provided on this Site is for general educational purposes only and is not intended to constitute investment or other advice on financial products. Such information is not, and should not be read as, an offer or recommendation to buy or sell or a solicitation of an offer or recommendation to buy or sell any particular digital asset or to use any particular investment strategy. Coinbase and its affiliates (collectively "Coinbase") makes no representations as to the accuracy, completeness, timeliness, suitability, or validity of any information on this Site and will not be liable for any errors, omissions, or delays in this information or any losses, injuries, or damages arising from its display or use. Unless otherwise noted, all images are the property of Coinbase. Coinbase is not registered or licensed with the U.S. Securities and Exchange Commission or the U.S. Commodity Futures Trading Commission. Links provided to third-party sites are for informational purposes. Such sites are not under the control of Coinbase, and Coinbase is not responsible for the accuracy of the content on such third-party sites.
                         </p>
 

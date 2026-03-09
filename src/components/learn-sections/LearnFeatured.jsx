@@ -3,11 +3,11 @@ import ArticleCard from '../ui/ArticleCard';
 
 const LearnFeatured = ({ featured, popular }) => {
   return (
-    <section className="px-5 md:px-10 pb-[50px] md:pb-[88px] pt-0">
-      <div className="grid grid-cols-1 gap-[50px] md:gap-[88px] lg:grid-cols-[1.5fr_0.5fr]">
+    <section className="px-6 md:px-10 pb-[40px] md:pb-[88px] pt-0">
+      <div className="grid grid-cols-1 gap-[40px] lg:gap-[88px] lg:grid-cols-[1.5fr_0.5fr]">
         {/* LEFT SIDE: FEATURED */}
         <div>
-          <h2 className="mb-[20px] md:mb-[35px] text-[22px] font-semibold text-black">
+          <h2 className="mb-[20px] md:mb-[35px] text-[20px] md:text-[22px] font-semibold text-black">
             Featured
           </h2>
           <ArticleCard 
@@ -22,16 +22,16 @@ const LearnFeatured = ({ featured, popular }) => {
 
         {/* RIGHT SIDE: POPULAR */}
         <div>
-          <h2 className="mb-[20px] md:mb-[35px] text-[22px] font-semibold text-black">
+          <h2 className="mb-[20px] md:mb-[35px] text-[20px] md:text-[22px] font-semibold text-black mt-8 lg:mt-0">
             Popular
           </h2>
-          <div className="space-y-[30px] md:space-y-[44px]">
+          <div className="space-y-[24px] md:space-y-[44px]">
             {popular.map((item, index) => (
               <div key={index} className="cursor-pointer group">
-                <p className="text-[12px] font-semibold tracking-wider text-[#6b7280]">
+                <p className="text-[11px] md:text-[12px] font-semibold tracking-wider text-[#6b7280]">
                   {item.tag}
                 </p>
-                <h3 className="mt-[13px] text-[20px] font-semibold leading-tight text-black group-hover:text-[#1652f0] transition-colors">
+                <h3 className="mt-[8px] md:mt-[13px] text-[16px] md:text-[20px] font-semibold leading-tight text-black group-hover:text-[#1652f0] transition-colors">
                   {item.title}
                 </h3>
               </div>
