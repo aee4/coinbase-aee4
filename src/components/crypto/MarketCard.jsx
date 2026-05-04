@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { tradableCoins, topGainers, newCoins } from "../../data/marketData";
 
-function MarketCard({ coinsByTab, initialTab = "new" }) {
+function MarketCard({ coinsByTab = {}, initialTab = "new", isLoading = false }) {
   const [activeTab, setActiveTab] = useState(initialTab);
 
   const tabs = [
@@ -11,9 +10,9 @@ function MarketCard({ coinsByTab, initialTab = "new" }) {
   ];
 
   const getCoins = () => {
-    if (activeTab === "tradable") return coinsByTab?.tradable || tradableCoins;
-    if (activeTab === "gainers") return coinsByTab?.gainers || topGainers;
-    return coinsByTab?.new || newCoins;
+    if (activeTab === "tradable") return coinsByTab.tradable || [];
+    if (activeTab === "gainers") return coinsByTab.gainers || [];
+    return coinsByTab.new || [];
   };
 
   const coins = getCoins();
@@ -42,7 +41,15 @@ function MarketCard({ coinsByTab, initialTab = "new" }) {
 
       {/* Coin list */}
       <div className="mt-10 space-y-7">
-        {coins.map((coin) => {
+        {isLoading && (
+          <p className="py-8 text-center text-[16px] text-[#8b93a6]">Loading...</p>
+        )}
+
+        {!isLoading && coins.length === 0 && (
+          <p className="py-8 text-center text-[16px] text-[#8b93a6]">No data available</p>
+        )}
+
+        {!isLoading && coins.map((coin) => {
           const isPositive = coin.change.includes("+") || Number.parseFloat(coin.change) > 0;
           const isNeutral = coin.change === "--" || coin.change === "0.00%";
 

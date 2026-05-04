@@ -1,26 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { statsCards, topMovers, newOnCoinbase, coins } from "../data/exploreData";
 import api from "../api/api";
 
 import ExploreHero from "./sections/explore/ExploreHero";
-import MarketStats from "./sections/explore/MarketStats";
-import CryptoPrices from "./sections/explore/CryptoPrices";
 import ExploreCTA from "./sections/explore/ExploreCTA";
 import ExploreSidebar from "./sections/explore/ExploreSidebar";
 import TopMovers from "./sections/explore/TopMovers";
 import NewOnCoinbase from "./sections/explore/NewOnCoinbase";
 import MarketCard from "../components/crypto/MarketCard";
-
-import chart1 from "../assets/images/chart-1.png";
-import chart2 from "../assets/images/chart-2.png";
-import chart3 from "../assets/images/chart-3.png";
-import chart4 from "../assets/images/chart-4.png";
-import chart5 from "../assets/images/chart-5.png";
-import chart6 from "../assets/images/chart-6.png";
-import chart7 from "../assets/images/chart-7.png";
-import chart8 from "../assets/images/chart-8.png";
-
-const assetCharts = [chart1, chart2, chart3, chart4, chart5, chart6, chart7, chart8];
 
 const getCryptoArray = (responseData) => {
   if (Array.isArray(responseData)) {
@@ -104,6 +90,7 @@ function Explore() {
   const [tradableCrypto, setTradableCrypto] = useState([]);
   const [gainerCrypto, setGainerCrypto] = useState([]);
   const [newListingCrypto, setNewListingCrypto] = useState([]);
+  const [isLoadingCrypto, setIsLoadingCrypto] = useState(true);
   const [cryptoError, setCryptoError] = useState("");
 
   useEffect(() => {
@@ -130,10 +117,12 @@ function Explore() {
           setGainerCrypto(gainers);
           setNewListingCrypto(newListings);
           setCryptoError("");
+          setIsLoadingCrypto(false);
         }
       } catch {
         if (isMounted) {
           setCryptoError("Unable to load live crypto data right now.");
+          setIsLoadingCrypto(false);
         }
       }
     };
@@ -145,17 +134,11 @@ function Explore() {
     };
   }, []);
 
-  const visibleTradableCrypto = tradableCrypto.length > 0 ? tradableCrypto : coins;
-  const visibleGainerCrypto = gainerCrypto.length > 0 ? gainerCrypto : topMovers;
-  const visibleNewListingCrypto = newListingCrypto.length > 0 ? newListingCrypto : newOnCoinbase;
-  const marketCardCoinsByTab =
-    tradableCrypto.length > 0 || gainerCrypto.length > 0 || newListingCrypto.length > 0
-      ? {
-          tradable: visibleTradableCrypto,
-          gainers: visibleGainerCrypto,
-          new: visibleNewListingCrypto,
-        }
-      : undefined;
+  const marketCardCoinsByTab = {
+    tradable: tradableCrypto,
+    gainers: gainerCrypto,
+    new: newListingCrypto,
+  };
 
   const scroll = (ref, direction) => {
     if (ref.current) {
@@ -167,6 +150,15 @@ function Explore() {
     }
   };
 
+  const renderEmptyState = (title) => (
+    <div className="px-6 md:px-10 py-8 md:py-12">
+      <h3 className="text-[20px] md:text-[25px] font-semibold tracking-[-0.02em] text-black">
+        {title}
+      </h3>
+      <p className="mt-4 text-[14px] text-[#5b616e]">No data available</p>
+    </div>
+  );
+
   return (
     <div className="bg-white">
       <section className="w-full">
@@ -174,34 +166,43 @@ function Explore() {
           <div className="flex min-w-0 flex-col border-r border-[#e5e7eb]">
             <ExploreHero />
             <div className="border-t border-[#e5e7eb]" />
-            <MarketStats statsCards={statsCards} />
-            <div className="border-t border-[#e5e7eb]" />
             <div className="px-6 md:px-9 pt-12 md:pt-16">
-              <MarketCard coinsByTab={marketCardCoinsByTab} initialTab="tradable" />
+              <MarketCard
+                coinsByTab={marketCardCoinsByTab}
+                initialTab="tradable"
+                isLoading={isLoadingCrypto}
+              />
               {cryptoError && (
                 <p className="mt-4 text-[14px] font-medium text-[#ea3943]">
                   {cryptoError}
                 </p>
               )}
             </div>
-            <CryptoPrices coins={visibleTradableCrypto} assetCharts={assetCharts} />
             <ExploreCTA />
           </div>
 
           <ExploreSidebar>
-            <TopMovers
-              title="Gainers"
-              topMovers={visibleGainerCrypto}
-              scrollRef={topMoversRef}
-              onScroll={scroll}
-            />
+            {isLoadingCrypto || gainerCrypto.length > 0 ? (
+              <TopMovers
+                title="Gainers"
+                topMovers={gainerCrypto}
+                scrollRef={topMoversRef}
+                onScroll={scroll}
+              />
+            ) : (
+              renderEmptyState("Gainers")
+            )}
             <div className="border-t border-[#e5e7eb]" />
-            <NewOnCoinbase
-              title="New Listings"
-              newOnCoinbase={visibleNewListingCrypto}
-              scrollRef={newOnCoinbaseRef}
-              onScroll={scroll}
-            />
+            {isLoadingCrypto || newListingCrypto.length > 0 ? (
+              <NewOnCoinbase
+                title="New Listings"
+                newOnCoinbase={newListingCrypto}
+                scrollRef={newOnCoinbaseRef}
+                onScroll={scroll}
+              />
+            ) : (
+              renderEmptyState("New Listings")
+            )}
           </ExploreSidebar>
         </div>
       </section>
