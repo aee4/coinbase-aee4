@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   ArrowDown,
   Bell,
@@ -26,14 +27,14 @@ import {
 import api from "../api/api";
 
 const navItems = [
-  { label: "Home", icon: Home, active: true },
-  { label: "My assets", icon: Wallet },
-  { label: "Trade", icon: ArrowLeftRight },
-  { label: "Earn", icon: TrendingUp },
-  { label: "Learning rewards", icon: GraduationCap },
-  { label: "Web3", icon: Globe2 },
-  { label: "Card", icon: CreditCard },
-  { label: "More", icon: MoreHorizontal },
+  { label: "Home", icon: Home, to: "/dashboard", active: true },
+  { label: "My assets", icon: Wallet, to: "/dashboard/assets" },
+  { label: "Trade", icon: ArrowLeftRight, to: "/dashboard" },
+  { label: "Earn", icon: TrendingUp, to: "/dashboard" },
+  { label: "Learning rewards", icon: GraduationCap, to: "/learn" },
+  { label: "Web3", icon: Globe2, to: "/dashboard" },
+  { label: "Card", icon: CreditCard, to: "/dashboard" },
+  { label: "More", icon: MoreHorizontal, to: "/dashboard" },
 ];
 
 const chartPaths = [
@@ -159,6 +160,32 @@ function CoinIcon({ coin, index }) {
   );
 }
 
+function AppQrCode() {
+  const activeCells = new Set([
+    2, 3, 4, 6, 7, 9, 11, 13, 17, 19, 20, 22, 25, 27, 29, 31, 34, 37, 40, 41, 43, 46, 49, 50, 52, 54, 56, 59, 61,
+    64, 67, 68, 70, 72, 75, 78, 80, 82, 84, 86, 89, 91, 93, 94, 96, 99, 101, 103, 105, 107, 108, 111, 113, 115,
+    117, 119, 121,
+  ]);
+
+  return (
+    <div className="relative h-[66px] w-[66px] rounded-[8px] border border-[#d6deea] bg-white p-[7px] shadow-[0_10px_28px_rgba(15,23,42,0.12)]">
+      {[0, 1, 2].map((corner) => (
+        <span
+          key={corner}
+          className={`absolute h-[17px] w-[17px] rounded-[3px] border-[4px] border-black ${
+            corner === 0 ? "left-[7px] top-[7px]" : corner === 1 ? "right-[7px] top-[7px]" : "bottom-[7px] left-[7px]"
+          }`}
+        />
+      ))}
+      <div className="grid h-full w-full grid-cols-11 gap-[2px]">
+        {Array.from({ length: 121 }).map((_, index) => (
+          <span key={index} className={`rounded-[1px] ${activeCells.has(index) ? "bg-[#111827]" : "bg-transparent"}`} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Dashboard() {
   const [profile, setProfile] = useState(null);
   const [watchlist, setWatchlist] = useState([]);
@@ -226,9 +253,9 @@ function Dashboard() {
               const Icon = item.icon;
 
               return (
-                <button
+                <Link
                   key={item.label}
-                  type="button"
+                  to={item.to}
                   className={`group flex h-14 w-full items-center gap-4 rounded-[18px] px-5 text-left text-[14px] font-semibold transition-all duration-200 active:scale-[0.98] ${
                     item.active
                       ? "bg-[#f2f6ff] text-[#0052ff] shadow-[0_10px_26px_rgba(0,82,255,0.08)]"
@@ -243,32 +270,33 @@ function Dashboard() {
                     <Icon size={18} strokeWidth={2.4} />
                   </span>
                   {item.label}
-                </button>
+                </Link>
               );
             })}
           </nav>
 
-          <div className="border-t border-[#eef0f3] px-5 py-6">
-            <div className="mb-9 flex items-center justify-between text-[13px] font-medium text-[#5b616e]">
+          <div className="border-t border-[#eef0f3] px-5 py-5">
+            <div className="mb-6 flex items-center justify-between text-[13px] font-medium text-[#5b616e]">
               <span>Advanced</span>
               <span className="flex h-5 w-9 items-center justify-end rounded-full bg-[#0052ff] p-0.5">
                 <span className="h-4 w-4 rounded-full bg-white shadow-sm" />
               </span>
             </div>
-            <div className="flex items-end justify-between">
-              <div>
-                <p className="text-[13px] font-bold">Get the app</p>
-                <p className="mt-1 text-[12px] leading-4 text-[#5b616e]">
-                  Access your assets
-                  <br />
-                  anywhere
-                </p>
+            <div className="rounded-[12px] bg-[#f7faff] p-4 shadow-[inset_0_0_0_1px_#edf2fb]">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[13px] font-bold">Get the Coinbase app</p>
+                  <p className="mt-1 text-[12px] leading-4 text-[#5b616e]">
+                    Manage your assets
+                    <br />
+                    on the go
+                  </p>
+                </div>
+                <AppQrCode />
               </div>
-              <div className="grid h-10 w-10 grid-cols-4 gap-px rounded-[4px] bg-white p-1 shadow-[inset_0_0_0_1px_#d9dee7]">
-                {Array.from({ length: 16 }).map((_, index) => (
-                  <span key={index} className={index % 3 === 0 || index === 5 ? "bg-black" : "bg-[#d9dee7]"} />
-                ))}
-              </div>
+              <button type="button" className="mt-3 text-[12px] font-bold text-[#0052ff]">
+                Download app
+              </button>
             </div>
           </div>
         </aside>
