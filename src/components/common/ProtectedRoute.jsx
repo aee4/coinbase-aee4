@@ -10,7 +10,11 @@ function ProtectedRoute({ children }) {
 
     const checkAuth = async () => {
       try {
-        await api.get("/users/profile");
+        try {
+          await api.get("/profile");
+        } catch {
+          await api.get("/users/profile");
+        }
 
         if (isMounted) {
           setStatus("authenticated");

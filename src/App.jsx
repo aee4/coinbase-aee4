@@ -10,6 +10,7 @@ const AssetDetail = lazy(() => import("./pages/AssetDetail"));
 const Learn = lazy(() => import("./pages/Learn"));
 const Profile = lazy(() => import("./pages/Profile"));
 const AddCrypto = lazy(() => import("./pages/AddCrypto"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 const SignIn = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const SignUpType = lazy(() => import("./pages/SignUpType"));
@@ -46,6 +47,14 @@ function App() {
           </Route>
 
           <Route path="/signin" element={<SignIn />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/signup" element={<SignUpType />} />
           <Route path="/signup/details" element={<SignUp />} />
         </Routes>

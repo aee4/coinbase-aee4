@@ -37,8 +37,18 @@ function SignIn() {
     setIsSubmitting(true);
 
     try {
-      await api.post("/auth/login", formData);
-      navigate("/");
+      const response = await api.post("/auth/login", formData);
+      const token =
+        response.data?.token ||
+        response.data?.jwt ||
+        response.data?.accessToken ||
+        response.data?.data?.token;
+
+      if (token) {
+        localStorage.setItem("token", token);
+      }
+
+      navigate("/dashboard");
     } catch (requestError) {
       setError(getErrorMessage(requestError));
     } finally {
