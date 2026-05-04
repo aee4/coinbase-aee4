@@ -10,6 +10,10 @@ function SignUp() {
       title="Create your account" 
       description="Access all that Coinbase has to offer with a single account."
     >
+      <p className="mt-3 mb-5 text-left text-[13px] font-medium text-amber-700">
+        Demo app – do not use your real password.
+      </p>
+
       <AuthInput 
         label="Email"
         placeholder="Your email address"

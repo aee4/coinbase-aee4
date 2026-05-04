@@ -144,6 +144,10 @@ function Footer() {
 
                     </div>
                 )}
+
+                <p className="border-t border-gray-200 mt-8 pt-6 text-center text-[12px] md:text-[13px] text-gray-500">
+                    This is a demo project. Do not enter real personal information.
+                </p>
             </div>
         </footer>
     );

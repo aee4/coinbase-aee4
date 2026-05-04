@@ -7,6 +7,10 @@ import Button from "../components/common/Button";
 function SignIn() {
   return (
     <AuthLayout title="Sign in to Coinbase">
+      <p className="mt-3 mb-5 text-left text-[13px] font-medium text-amber-700">
+        Demo app – do not use your real password.
+      </p>
+
       <AuthInput 
         label="Email"
         placeholder="Your email address"
