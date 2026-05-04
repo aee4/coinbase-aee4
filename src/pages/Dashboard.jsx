@@ -25,6 +25,7 @@ import {
   Wallet,
 } from "lucide-react";
 import api from "../api/api";
+import AppQrCode from "../components/common/AppQrCode";
 
 const navItems = [
   { label: "Home", icon: Home, to: "/dashboard", active: true },
@@ -156,32 +157,6 @@ function CoinIcon({ coin, index }) {
       style={{ backgroundColor: colors[index % colors.length] }}
     >
       {coin.symbol.slice(0, 1).toUpperCase()}
-    </div>
-  );
-}
-
-function AppQrCode() {
-  const activeCells = new Set([
-    2, 3, 4, 6, 7, 9, 11, 13, 17, 19, 20, 22, 25, 27, 29, 31, 34, 37, 40, 41, 43, 46, 49, 50, 52, 54, 56, 59, 61,
-    64, 67, 68, 70, 72, 75, 78, 80, 82, 84, 86, 89, 91, 93, 94, 96, 99, 101, 103, 105, 107, 108, 111, 113, 115,
-    117, 119, 121,
-  ]);
-
-  return (
-    <div className="relative h-[66px] w-[66px] rounded-[8px] border border-[#d6deea] bg-white p-[7px] shadow-[0_10px_28px_rgba(15,23,42,0.12)]">
-      {[0, 1, 2].map((corner) => (
-        <span
-          key={corner}
-          className={`absolute h-[17px] w-[17px] rounded-[3px] border-[4px] border-black ${
-            corner === 0 ? "left-[7px] top-[7px]" : corner === 1 ? "right-[7px] top-[7px]" : "bottom-[7px] left-[7px]"
-          }`}
-        />
-      ))}
-      <div className="grid h-full w-full grid-cols-11 gap-[2px]">
-        {Array.from({ length: 121 }).map((_, index) => (
-          <span key={index} className={`rounded-[1px] ${activeCells.has(index) ? "bg-[#111827]" : "bg-transparent"}`} />
-        ))}
-      </div>
     </div>
   );
 }
