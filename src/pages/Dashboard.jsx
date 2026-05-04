@@ -7,12 +7,14 @@ import {
   Bell,
   CandlestickChart,
   CircleHelp,
+  Coins,
   Grid3X3,
   Home,
   LineChart,
   MoreVertical,
   ReceiptText,
   Search,
+  Shield,
   WalletCards,
 } from "lucide-react";
 import api from "../api/api";
@@ -39,6 +41,12 @@ const navItems = [
 ];
 
 const cryptoRows = [
+  { name: "Bitcoin", subtitle: "Most popular", symbol: "B", color: "#f7931a", action: "Buy" },
+  { name: "Ethereum", subtitle: "Most popular", symbol: "ETH", color: "#627eea", action: "Buy" },
+  { name: "Dogecoin", subtitle: "Most traded today", symbol: "D", color: "#c2a633", action: "Buy", muted: true },
+];
+
+const derivativeRows = [
   { name: "BTC Perpetual", symbol: "B", color: "#f7931a" },
   { name: "ETH Perpetual", symbol: "ETH", color: "#627eea" },
   { name: "SOL Perpetual", symbol: "SOL", color: "#111827", muted: true },
@@ -55,18 +63,16 @@ function CoinbaseMark() {
 
 function CoinBadge({ color, symbol }) {
   const isEth = symbol === "ETH";
+  const isSol = symbol === "SOL";
 
   return (
-    <span
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[19px] font-bold text-white"
-      style={{ backgroundColor: color }}
-    >
+    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[19px] font-bold text-white" style={{ backgroundColor: color }}>
       {isEth ? (
         <span className="relative h-6 w-4">
           <span className="absolute left-1/2 top-0 h-0 w-0 -translate-x-1/2 border-x-[8px] border-b-[13px] border-x-transparent border-b-white/90" />
           <span className="absolute bottom-0 left-1/2 h-0 w-0 -translate-x-1/2 border-x-[8px] border-t-[13px] border-x-transparent border-t-white/70" />
         </span>
-      ) : symbol === "SOL" ? (
+      ) : isSol ? (
         <span className="flex h-5 w-6 flex-col justify-between">
           <span className="h-1.5 rounded-full bg-[#14f195]" />
           <span className="h-1.5 rounded-full bg-[#9945ff]" />
@@ -94,6 +100,18 @@ function UnsupportedIllustration() {
   );
 }
 
+function WatchlistIllustration() {
+  return (
+    <div className="relative mx-auto h-[74px] w-[74px]" aria-hidden="true">
+      <span className="absolute left-7 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-[#f4d35e] text-[27px] font-semibold text-[#0a0b0d]">+</span>
+      <span className="absolute left-1 top-10 h-8 w-8 rounded-full bg-[#5a8bff]" />
+      <span className="absolute right-0 top-1 h-8 w-8 rounded-full bg-[#4f5866]" />
+      <span className="absolute left-2 top-10 h-8 w-8 rounded-full bg-[#0a0b0d]/70" />
+      <span className="absolute right-0 top-1 h-8 w-8 rounded-full bg-[#0a0b0d]/70" />
+    </div>
+  );
+}
+
 function SideRail() {
   return (
     <aside className="fixed inset-y-0 left-0 z-30 flex w-[92px] flex-col border-r border-[#e6e8eb] bg-white">
@@ -102,14 +120,7 @@ function SideRail() {
       </div>
       <nav className="flex flex-1 flex-col items-center gap-5 pt-4">
         {navItems.map(({ label, icon: Icon, active }) => (
-          <button
-            key={label}
-            type="button"
-            aria-label={label}
-            className={`flex h-[64px] w-[64px] items-center justify-center rounded-full transition-colors ${
-              active ? "bg-[#eef4ff] text-[#0052ff]" : "text-[#0a0b0d] hover:bg-[#f7f8fa]"
-            }`}
-          >
+          <button key={label} type="button" aria-label={label} className={`flex h-[64px] w-[64px] items-center justify-center rounded-full transition-colors ${active ? "bg-[#eef4ff] text-[#0052ff]" : "text-[#0a0b0d] hover:bg-[#f7f8fa]"}`}>
             <Icon size={25} strokeWidth={active ? 0 : 2.5} fill={active ? "currentColor" : "none"} />
           </button>
         ))}
@@ -117,11 +128,7 @@ function SideRail() {
       <div className="pb-5 text-center text-[#0a0b0d]">
         <CandlestickChart className="mx-auto" size={25} strokeWidth={2.4} />
         <p className="mt-3 text-[12px] font-bold">Advanced</p>
-        <button
-          className="mx-auto mt-4 flex h-[26px] w-[48px] items-center rounded-full bg-[#dfe3eb] p-1"
-          type="button"
-          aria-label="Advanced mode"
-        >
+        <button className="mx-auto mt-4 flex h-[26px] w-[48px] items-center rounded-full bg-[#dfe3eb] p-1" type="button" aria-label="Advanced mode">
           <span className="h-[20px] w-[20px] rounded-full bg-white shadow-sm" />
         </button>
       </div>
@@ -138,46 +145,26 @@ function Header({ profile, profileOpen, profileError, onProfileClick, onLogout }
       <div className="flex items-center gap-3">
         <label className="flex h-[48px] w-[430px] max-w-[37vw] items-center gap-4 rounded-full bg-[#f4f5f8] px-6">
           <Search size={22} className="text-[#0a0b0d]" strokeWidth={2.5} />
-          <input
-            className="min-w-0 flex-1 bg-transparent text-[20px] font-medium text-[#0a0b0d] outline-none placeholder:text-[#6b7280]"
-            placeholder="Search"
-            type="search"
-          />
+          <input className="min-w-0 flex-1 bg-transparent text-[20px] font-medium text-[#0a0b0d] outline-none placeholder:text-[#6b7280]" placeholder="Search" type="search" />
         </label>
         {[
           { label: "Notifications", icon: Bell },
           { label: "Help", icon: CircleHelp },
           { label: "Apps", icon: Grid3X3 },
         ].map(({ label, icon: Icon }) => (
-          <button
-            key={label}
-            type="button"
-            aria-label={label}
-            className="flex h-[48px] w-[48px] items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d] transition-colors hover:bg-[#e9edf5]"
-          >
+          <button key={label} type="button" aria-label={label} className="flex h-[48px] w-[48px] items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d] transition-colors hover:bg-[#e9edf5]">
             <Icon size={21} />
           </button>
         ))}
         <div className="relative">
-          <button
-            onClick={onProfileClick}
-            className="flex h-[48px] w-[48px] items-center justify-center rounded-full bg-[#0aa7d6] text-[19px] font-medium text-black"
-            type="button"
-            aria-label="Profile"
-          >
+          <button onClick={onProfileClick} className="flex h-[48px] w-[48px] items-center justify-center rounded-full bg-[#0aa7d6] text-[19px] font-medium text-black" type="button" aria-label="Profile">
             {initials}
           </button>
           {profileOpen && (
             <div className="absolute right-0 top-[60px] z-40 w-[280px] rounded-[12px] border border-[#e6e8eb] bg-white p-4 text-left shadow-[0_14px_40px_rgba(15,23,42,0.14)]">
               <p className="text-[16px] font-bold text-[#0a0b0d]">{profile?.name || "Coinbase user"}</p>
-              <p className="mt-1 break-all text-[14px] font-medium text-[#5b616e]">
-                {profile?.email || (profileError ? "Unable to load profile" : "Loading profile")}
-              </p>
-              <button
-                onClick={onLogout}
-                type="button"
-                className="mt-4 h-10 w-full rounded-full bg-[#f4f5f8] text-[14px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]"
-              >
+              <p className="mt-1 break-all text-[14px] font-medium text-[#5b616e]">{profile?.email || (profileError ? "Unable to load profile" : "Loading profile")}</p>
+              <button onClick={onLogout} type="button" className="mt-4 h-10 w-full rounded-full bg-[#f4f5f8] text-[14px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
                 Log out
               </button>
             </div>
@@ -188,10 +175,98 @@ function Header({ profile, profileOpen, profileError, onProfileClick, onLogout }
   );
 }
 
-function DepositTail() {
+function SectionArrow({ label }) {
   return (
-    <section className="border-b border-[#e6e8eb] px-9 py-6">
-      <button type="button" className="h-12 w-full rounded-full bg-[#f4f5f8] text-[18px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
+    <button type="button" aria-label={label} className="absolute right-9 top-8 flex h-12 w-12 items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d] hover:bg-[#e9edf5]">
+      <ArrowRight size={25} />
+    </button>
+  );
+}
+
+function SummarySection() {
+  return (
+    <section className="border-b border-[#e6e8eb] px-9 py-7">
+      <h2 className="text-[42px] font-medium tracking-[-0.06em] text-[#0a0b0d]">GHS 0.00</h2>
+      <div className="mt-9 space-y-5">
+        {[
+          { label: "Crypto", value: "GHS 0.00", icon: Coins },
+          { label: "Cash", value: "Deposit", detail: "3.35% APY", icon: WalletCards, accent: true },
+          { label: "Derivatives", value: "0 positions", icon: Shield },
+        ].map(({ label, value, detail, icon: Icon, accent }) => (
+          <button key={label} type="button" className="grid w-full grid-cols-[1fr_auto_24px] items-center gap-4 text-left">
+            <span className="flex items-center gap-5">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d]">
+                <Icon size={20} strokeWidth={2.4} />
+              </span>
+              <span className="text-[20px] font-bold text-[#0a0b0d]">
+                {label}
+                {detail && <span className="font-medium text-[#00a86b]"> · {detail}</span>}
+              </span>
+            </span>
+            <span className={`text-[19px] font-bold ${accent ? "text-[#0052ff]" : "text-[#0a0b0d]"}`}>{value}</span>
+            <ArrowRight className="text-[#7c8595]" size={20} />
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function WatchlistSection() {
+  return (
+    <section className="relative border-b border-[#e6e8eb] px-9 py-8">
+      <SectionArrow label="Open watchlist" />
+      <h2 className="text-[24px] font-bold text-[#0a0b0d]">Watchlist</h2>
+      <div className="mx-auto mt-8 flex max-w-[760px] flex-col items-center text-center">
+        <WatchlistIllustration />
+        <h3 className="mt-4 text-[23px] font-bold tracking-[-0.02em] text-[#0a0b0d]">Build your watchlist</h3>
+        <p className="mt-3 text-[18px] font-medium text-[#6b7280]">Keep track of crypto prices by adding assets to your watchlist</p>
+        <button type="button" className="mt-8 h-12 w-full rounded-full bg-[#f4f5f8] text-[18px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
+          Add to watchlist
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function CryptoSection() {
+  return (
+    <section className="relative border-b border-[#e6e8eb] px-9 py-7">
+      <SectionArrow label="Open crypto" />
+      <h2 className="text-[26px] font-bold tracking-[-0.03em] text-[#0a0b0d]">Crypto</h2>
+      <p className="mt-2 text-[21px] font-medium text-[#5b616e]">Trade millions of assets</p>
+      <div className="mt-12">
+        {cryptoRows.map((coin) => (
+          <div key={coin.name} className={`grid h-[72px] grid-cols-[1fr_76px] items-center gap-4 ${coin.muted ? "bg-[#f7f8fa]" : ""}`}>
+            <div className="flex items-center gap-5">
+              <CoinBadge color={coin.color} symbol={coin.symbol} />
+              <div>
+                <p className={`text-[20px] font-bold leading-tight ${coin.muted ? "text-[#303642]" : "text-[#0a0b0d]"}`}>{coin.name}</p>
+                <p className="mt-1 text-[18px] font-medium leading-tight text-[#5b616e]">{coin.subtitle}</p>
+              </div>
+            </div>
+            <button type="button" className="h-11 rounded-full bg-[#f4f5f8] text-[18px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
+              {coin.action}
+            </button>
+          </div>
+        ))}
+      </div>
+      <button type="button" className="mt-5 h-12 w-full rounded-full bg-[#f4f5f8] text-[18px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
+        Explore all crypto
+      </button>
+    </section>
+  );
+}
+
+function CashSection() {
+  return (
+    <section className="relative border-b border-[#e6e8eb] px-9 py-8">
+      <SectionArrow label="Open cash" />
+      <h2 className="text-[26px] font-bold tracking-[-0.03em] text-[#0a0b0d]">Cash</h2>
+      <p className="mt-3 text-[21px] font-medium text-[#5b616e]">
+        Earn <span className="text-[#00c176]">3.35% APY</span>
+      </p>
+      <button type="button" className="mt-14 h-12 w-full rounded-full bg-[#f4f5f8] text-[18px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
         Deposit cash
       </button>
     </section>
@@ -201,22 +276,12 @@ function DepositTail() {
 function DerivativesSection() {
   return (
     <section className="relative border-b border-[#e6e8eb] px-9 py-7">
-      <button
-        type="button"
-        aria-label="Open derivatives"
-        className="absolute right-9 top-8 flex h-12 w-12 items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d] hover:bg-[#e9edf5]"
-      >
-        <ArrowRight size={25} />
-      </button>
+      <SectionArrow label="Open derivatives" />
       <h2 className="text-[26px] font-bold tracking-[-0.03em] text-[#0a0b0d]">Derivatives</h2>
       <p className="mt-2 text-[18px] font-medium text-[#5b616e]">Trade with up to 50x leverage</p>
-
       <div className="mt-12">
-        {cryptoRows.map((coin) => (
-          <div
-            key={coin.name}
-            className={`grid h-[72px] grid-cols-[1fr_76px] items-center gap-4 ${coin.muted ? "bg-[#f7f8fa]" : ""}`}
-          >
+        {derivativeRows.map((coin) => (
+          <div key={coin.name} className={`grid h-[72px] grid-cols-[1fr_76px] items-center gap-4 ${coin.muted ? "bg-[#f7f8fa]" : ""}`}>
             <div className="flex items-center gap-5">
               <CoinBadge color={coin.color} symbol={coin.symbol} />
               <div>
@@ -255,30 +320,40 @@ function FooterLinks() {
 function BuyPanel() {
   return (
     <aside className="border-l border-[#e6e8eb] bg-white">
-      <section className="border-b border-[#e6e8eb] px-10 py-0">
-        <div className="flex flex-col items-center text-center">
-          <h2 className="text-[31px] font-bold tracking-[-0.04em] text-[#0a0b0d]">Buys not supported</h2>
-          <p className="mt-5 max-w-[390px] text-[18px] font-medium leading-[1.45] text-[#0a0b0d]">
-            Coinbase doesn't currently support buys in your country. Subscribe to our blog to be notified when we add support for your country.
-          </p>
-          <button type="button" className="mt-10 h-[62px] w-full max-w-[360px] rounded-full bg-[#0052ff] text-[18px] font-bold text-white">
-            Subscribe now
-          </button>
-        </div>
-      </section>
-      <section className="space-y-7 px-10 py-10">
-        {[
-          { label: "Send crypto", icon: ArrowUp },
-          { label: "Receive crypto", icon: ArrowDown },
-        ].map(({ label, icon: Icon }) => (
-          <button key={label} type="button" className="flex items-center gap-5 text-[22px] font-bold text-[#0a0b0d]">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0052ff] text-white">
-              <Icon size={25} />
-            </span>
-            {label}
-          </button>
-        ))}
-      </section>
+      <div className="sticky top-[78px]">
+        <section className="border-b border-[#e6e8eb] px-10 py-6">
+          <div className="inline-flex h-12 rounded-full bg-[#f4f5f8] p-1">
+            {["Buy", "Sell", "Convert"].map((tab, index) => (
+              <button key={tab} type="button" className={`h-10 rounded-full px-6 text-[17px] font-bold ${index === 0 ? "bg-white text-[#0a0b0d] shadow-sm" : "text-[#20242d]"}`}>
+                {tab}
+              </button>
+            ))}
+          </div>
+          <div className="mt-14 flex flex-col items-center text-center">
+            <UnsupportedIllustration />
+            <h2 className="mt-10 text-[31px] font-bold tracking-[-0.04em] text-[#0a0b0d]">Buys not supported</h2>
+            <p className="mt-5 max-w-[390px] text-[18px] font-medium leading-[1.45] text-[#0a0b0d]">
+              Coinbase doesn't currently support buys in your country. Subscribe to our blog to be notified when we add support for your country.
+            </p>
+            <button type="button" className="mt-10 h-[62px] w-full max-w-[360px] rounded-full bg-[#0052ff] text-[18px] font-bold text-white">
+              Subscribe now
+            </button>
+          </div>
+        </section>
+        <section className="space-y-7 px-10 py-10">
+          {[
+            { label: "Send crypto", icon: ArrowUp },
+            { label: "Receive crypto", icon: ArrowDown },
+          ].map(({ label, icon: Icon }) => (
+            <button key={label} type="button" className="flex items-center gap-5 text-[22px] font-bold text-[#0a0b0d]">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0052ff] text-white">
+                <Icon size={25} />
+              </span>
+              {label}
+            </button>
+          ))}
+        </section>
+      </div>
     </aside>
   );
 }
@@ -335,7 +410,10 @@ function Dashboard() {
         />
         <main className="grid min-h-[calc(100vh-78px)] grid-cols-[minmax(0,1fr)_460px]">
           <div className="min-w-0">
-            <DepositTail />
+            <SummarySection />
+            <WatchlistSection />
+            <CryptoSection />
+            <CashSection />
             <DerivativesSection />
             <FooterLinks />
           </div>
