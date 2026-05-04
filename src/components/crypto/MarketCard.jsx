@@ -4,9 +4,9 @@ function MarketCard({ coinsByTab = {}, initialTab = "new", isLoading = false }) 
   const [activeTab, setActiveTab] = useState(initialTab);
 
   const tabs = [
-    { id: "tradable", label: "Tradable" },
-    { id: "gainers", label: "Top gainers" },
-    { id: "new", label: "New on Coinbase" },
+    { id: "tradable", label: "Tradable", emptyLabel: "tradable crypto" },
+    { id: "gainers", label: "Top gainers", emptyLabel: "top gainer" },
+    { id: "new", label: "New on Coinbase", emptyLabel: "new listing" },
   ];
 
   const getCoins = () => {
@@ -16,11 +16,12 @@ function MarketCard({ coinsByTab = {}, initialTab = "new", isLoading = false }) 
   };
 
   const coins = getCoins();
+  const activeTabDetails = tabs.find((tab) => tab.id === activeTab) || tabs[0];
 
   return (
     <div className="w-full max-w-[680px] rounded-[40px] bg-black px-10 py-9 text-white">
       {/* Tabs */}
-      <div className="flex items-center gap-4 text-[18px] font-medium">
+      <div className="flex flex-wrap items-center gap-4 text-[18px] font-medium">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
 
@@ -39,14 +40,22 @@ function MarketCard({ coinsByTab = {}, initialTab = "new", isLoading = false }) 
         })}
       </div>
 
+      <p className="mt-5 text-[13px] font-medium uppercase tracking-[0.08em] text-[#8b93a6]">
+        {activeTabDetails.label} · {coins.length} {coins.length === 1 ? "asset" : "assets"}
+      </p>
+
       {/* Coin list */}
       <div className="mt-10 space-y-7">
         {isLoading && (
-          <p className="py-8 text-center text-[16px] text-[#8b93a6]">Loading...</p>
+          <p className="py-8 text-center text-[16px] text-[#8b93a6]">
+            Loading {activeTabDetails.emptyLabel} data...
+          </p>
         )}
 
         {!isLoading && coins.length === 0 && (
-          <p className="py-8 text-center text-[16px] text-[#8b93a6]">No data available</p>
+          <p className="py-8 text-center text-[16px] text-[#8b93a6]">
+            No {activeTabDetails.emptyLabel} data available
+          </p>
         )}
 
         {!isLoading && coins.map((coin) => {

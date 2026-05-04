@@ -164,12 +164,12 @@ function Explore() {
     }
   };
 
-  const renderEmptyState = (title) => (
+  const renderStatusState = (title, message) => (
     <div className="px-6 md:px-10 py-8 md:py-12">
       <h3 className="text-[20px] md:text-[25px] font-semibold tracking-[-0.02em] text-black">
         {title}
       </h3>
-      <p className="mt-4 text-[14px] text-[#5b616e]">No data available</p>
+      <p className="mt-4 text-[14px] text-[#5b616e]">{message}</p>
     </div>
   );
 
@@ -199,7 +199,9 @@ function Explore() {
           </div>
 
           <ExploreSidebar>
-            {isLoadingCrypto || gainerCrypto.length > 0 ? (
+            {isLoadingCrypto ? (
+              renderStatusState("Gainers", "Loading top gainer data...")
+            ) : gainerCrypto.length > 0 ? (
               <TopMovers
                 title="Gainers"
                 topMovers={gainerCrypto}
@@ -207,10 +209,12 @@ function Explore() {
                 onScroll={scroll}
               />
             ) : (
-              renderEmptyState("Gainers")
+              renderStatusState("Gainers", "No top gainer data available")
             )}
             <div className="border-t border-[#e5e7eb]" />
-            {isLoadingCrypto || newListingCrypto.length > 0 ? (
+            {isLoadingCrypto ? (
+              renderStatusState("New Listings", "Loading new listing data...")
+            ) : newListingCrypto.length > 0 ? (
               <NewOnCoinbase
                 title="New Listings"
                 newOnCoinbase={newListingCrypto}
@@ -218,7 +222,7 @@ function Explore() {
                 onScroll={scroll}
               />
             ) : (
-              renderEmptyState("New Listings")
+              renderStatusState("New Listings", "No new listing data available")
             )}
           </ExploreSidebar>
         </div>

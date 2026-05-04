@@ -84,7 +84,7 @@ function Home() {
                     api.get("/crypto/new"),
                 ]);
 
-                const tradable = getCryptoArray(cryptoResponse.data).map(normalizeCrypto);
+                const tradable = getCryptoArray(cryptoResponse.data).slice(0, 6).map(normalizeCrypto);
                 const gainers = getCryptoArray(gainersResponse.data)
                     .map(normalizeCrypto)
                     .sort((firstCoin, secondCoin) => secondCoin.change24h - firstCoin.change24h);
