@@ -1,12 +1,12 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-const TopMovers = ({ topMovers, scrollRef, onScroll }) => {
+const TopMovers = ({ topMovers, scrollRef, onScroll, title = "Top movers" }) => {
   return (
     <div className="px-6 md:px-10 py-8 md:py-12">
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-[20px] md:text-[25px] font-semibold tracking-[-0.02em] text-black">
-            Top movers
+            {title}
           </h3>
           <p className="mt-2 md:mt-4 text-[13px] text-[#5b616e]">
             24hr change
@@ -47,6 +47,12 @@ const TopMovers = ({ topMovers, scrollRef, onScroll }) => {
             <p className="mt-5 md:mt-7 text-[13px] text-[#6b7280]">
               {mover.symbol}
             </p>
+
+            {mover.name && (
+              <p className="mt-1 text-[14px] md:text-[15px] font-semibold text-black">
+                {mover.name}
+              </p>
+            )}
 
             <p
               className={`mt-1 md:mt-2 text-[14px] md:text-[15px] font-medium ${mover.changeColor}`}

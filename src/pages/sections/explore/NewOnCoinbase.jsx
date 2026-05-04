@@ -1,11 +1,11 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-const NewOnCoinbase = ({ newOnCoinbase, scrollRef, onScroll }) => {
+const NewOnCoinbase = ({ newOnCoinbase, scrollRef, onScroll, title = "New on Coinbase" }) => {
   return (
     <div className="px-6 md:px-10 py-8 md:py-12">
       <div className="flex items-center justify-between">
         <h3 className="text-[20px] md:text-[25px] font-semibold tracking-[-0.02em] text-black">
-          New on Coinbase
+          {title}
         </h3>
 
         <div className="flex items-center gap-4 md:gap-7 pt-1 text-black">
@@ -47,8 +47,14 @@ const NewOnCoinbase = ({ newOnCoinbase, scrollRef, onScroll }) => {
               {coin.name}
             </p>
 
+            {coin.change && (
+              <p className={`mt-1 md:mt-2 text-[14px] md:text-[15px] font-medium ${coin.changeColor}`}>
+                {coin.change}
+              </p>
+            )}
+
             <p className="mt-1 md:mt-2 text-[13px] text-black">
-              {coin.added}
+              {coin.price || coin.added}
             </p>
           </div>
         ))}

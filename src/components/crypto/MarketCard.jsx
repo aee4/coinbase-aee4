@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { tradableCoins, topGainers, newCoins } from "../../data/marketData";
 
-function MarketCard() {
-  const [activeTab, setActiveTab] = useState("new");
+function MarketCard({ coinsByTab, initialTab = "new" }) {
+  const [activeTab, setActiveTab] = useState(initialTab);
 
   const tabs = [
     { id: "tradable", label: "Tradable" },
@@ -11,9 +11,9 @@ function MarketCard() {
   ];
 
   const getCoins = () => {
-    if (activeTab === "tradable") return tradableCoins;
-    if (activeTab === "gainers") return topGainers;
-    return newCoins;
+    if (activeTab === "tradable") return coinsByTab?.tradable || tradableCoins;
+    if (activeTab === "gainers") return coinsByTab?.gainers || topGainers;
+    return coinsByTab?.new || newCoins;
   };
 
   const coins = getCoins();
@@ -43,23 +43,32 @@ function MarketCard() {
       {/* Coin list */}
       <div className="mt-10 space-y-7">
         {coins.map((coin) => {
-          const isPositive = coin.change.includes("↗");
-          const isNeutral = coin.change === "--";
+          const isPositive = coin.change.includes("+") || Number.parseFloat(coin.change) > 0;
+          const isNeutral = coin.change === "--" || coin.change === "0.00%";
 
           return (
-            <div key={coin.name} className="flex items-center justify-between">
+            <div key={`${coin.symbol || coin.name}-${coin.name}`} className="flex items-center justify-between">
               <div className="flex items-center gap-5">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white">
-                  <img
-                    src={coin.logo}
-                    alt={coin.name}
-                    className="h-7 w-7 object-contain"
-                  />
+                  {coin.logo && (
+                    <img
+                      src={coin.logo}
+                      alt={coin.name}
+                      className="h-7 w-7 object-contain"
+                    />
+                  )}
                 </div>
 
-                <span className="text-[30px] font-normal tracking-[-0.04em]">
-                  {coin.name}
-                </span>
+                <div>
+                  <span className="block text-[30px] font-normal tracking-[-0.04em]">
+                    {coin.name}
+                  </span>
+                  {coin.symbol && (
+                    <span className="block text-[15px] uppercase text-[#8b93a6]">
+                      {coin.symbol}
+                    </span>
+                  )}
+                </div>
               </div>
 
               <div className="text-right">

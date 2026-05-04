@@ -2,11 +2,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 
 import Layout from "./components/layout/Layout";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 const Home = lazy(() => import("./pages/Home"));
 const Explore = lazy(() => import("./pages/Explore"));
 const AssetDetail = lazy(() => import("./pages/AssetDetail"));
 const Learn = lazy(() => import("./pages/Learn"));
+const Profile = lazy(() => import("./pages/Profile"));
+const AddCrypto = lazy(() => import("./pages/AddCrypto"));
 const SignIn = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const SignUpType = lazy(() => import("./pages/SignUpType"));
@@ -31,6 +34,15 @@ function App() {
             <Route path="/asset/:id" element={<AssetDetail />} />
             <Route path="/assets/:id" element={<AssetDetail />} />
             <Route path="/learn" element={<Learn />} />
+            <Route path="/add-crypto" element={<AddCrypto />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
           </Route>
 
           <Route path="/signin" element={<SignIn />} />
