@@ -166,6 +166,8 @@ function Dashboard() {
   const [watchlist, setWatchlist] = useState([]);
   const [topMovers, setTopMovers] = useState([]);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isProfileLoading, setIsProfileLoading] = useState(false);
+  const [profileError, setProfileError] = useState("");
   const [shouldRedirect, setShouldRedirect] = useState(false);
 
   useEffect(() => {
@@ -206,6 +208,35 @@ function Dashboard() {
       isMounted = false;
     };
   }, []);
+
+  const loadProfileDetails = async () => {
+    setIsProfileLoading(true);
+    setProfileError("");
+
+    try {
+      const profileResponse = await api.get("/profile").catch(() => api.get("/users/profile"));
+      setProfile(normalizeProfile(profileResponse.data));
+    } catch {
+      localStorage.removeItem("token");
+      localStorage.removeItem("jwt");
+      setProfileError("Unable to load profile.");
+      setShouldRedirect(true);
+    } finally {
+      setIsProfileLoading(false);
+    }
+  };
+
+  const handleProfileClick = () => {
+    setIsProfileOpen((isOpen) => {
+      const nextOpenState = !isOpen;
+
+      if (nextOpenState) {
+        loadProfileDetails();
+      }
+
+      return nextOpenState;
+    });
+  };
 
   const initials = useMemo(() => getInitials(profile?.name, profile?.email), [profile]);
   const visibleAssets = watchlist.slice(0, 4);
@@ -296,7 +327,7 @@ function Dashboard() {
             <div className="relative">
               <button
                 type="button"
-                onClick={() => setIsProfileOpen((isOpen) => !isOpen)}
+                onClick={handleProfileClick}
                 className="flex h-10 items-center gap-2 rounded-full text-[13px] font-bold text-white transition-all duration-200 active:scale-95"
               >
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0052ff] shadow-[0_6px_16px_rgba(0,82,255,0.22)]">
@@ -306,8 +337,19 @@ function Dashboard() {
               </button>
               {isProfileOpen && (
                 <div className="absolute right-0 top-12 z-20 w-64 rounded-[8px] border border-[#e6e8eb] bg-white p-4 shadow-xl">
-                  <p className="text-[15px] font-semibold">{profile?.name || "Coinbase user"}</p>
-                  <p className="mt-1 break-all text-[13px] text-[#5b616e]">{profile?.email || "Profile loading"}</p>
+                  {isProfileLoading ? (
+                    <div className="flex items-center gap-3 text-[13px] font-semibold text-[#5b616e]">
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#0052ff] border-t-transparent" />
+                      Loading profile
+                    </div>
+                  ) : profileError ? (
+                    <p className="text-[13px] font-semibold text-[#cf202f]">{profileError}</p>
+                  ) : (
+                    <>
+                      <p className="text-[15px] font-semibold">{profile?.name || "Coinbase user"}</p>
+                      <p className="mt-1 break-all text-[13px] text-[#5b616e]">{profile?.email || "Profile loading"}</p>
+                    </>
+                  )}
                 </div>
               )}
             </div>
