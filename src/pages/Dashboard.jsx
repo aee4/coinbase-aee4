@@ -3,15 +3,15 @@ import { Navigate } from "react-router-dom";
 import {
   Bell,
   BookOpen,
-  CircleDollarSign,
+  ArrowLeftRight,
   CreditCard,
+  Globe2,
   Grid3X3,
   Home,
-  LineChart,
   MoreHorizontal,
   Search,
   Send,
-  Sparkles,
+  GraduationCap,
   TrendingUp,
   Wallet,
 } from "lucide-react";
@@ -20,10 +20,10 @@ import api from "../api/api";
 const navItems = [
   { label: "Home", icon: Home, active: true },
   { label: "My assets", icon: Wallet },
-  { label: "Trade", icon: LineChart },
-  { label: "Earn", icon: CircleDollarSign },
-  { label: "Learning rewards", icon: BookOpen },
-  { label: "Web3", icon: Sparkles },
+  { label: "Trade", icon: ArrowLeftRight },
+  { label: "Earn", icon: TrendingUp },
+  { label: "Learning rewards", icon: GraduationCap },
+  { label: "Web3", icon: Globe2 },
   { label: "Card", icon: CreditCard },
   { label: "More", icon: MoreHorizontal },
 ];
@@ -321,19 +321,19 @@ function Dashboard() {
               <table className="w-full min-w-[680px] border-collapse">
                 <thead>
                   <tr className="border-b border-[#eef0f3]">
-                    <th className="w-[250px] pb-3 text-left text-[12px] font-semibold text-[#8a919e]">Asset</th>
-                    <th className="pb-3 text-right text-[12px] font-semibold text-[#8a919e]">Price</th>
-                    <th className="pb-3 text-center text-[12px] font-semibold text-[#8a919e]">Chart</th>
-                    <th className="pb-3 text-right text-[12px] font-semibold text-[#8a919e]">24h change</th>
-                    <th className="pb-3 text-right text-[12px] font-semibold text-[#8a919e]">Market cap</th>
-                    <th className="pb-3 text-right text-[12px] font-semibold text-[#8a919e]">Trade</th>
-                    <th className="pb-3 text-right text-[12px] font-semibold text-[#8a919e]">Watch</th>
+                    <th className="w-[250px] px-5 pb-3 text-left text-[12px] font-semibold text-[#8a919e]">Asset</th>
+                    <th className="min-w-[150px] px-5 pb-3 text-right text-[12px] font-semibold text-[#8a919e]">Price</th>
+                    <th className="px-5 pb-3 text-center text-[12px] font-semibold text-[#8a919e]">Chart</th>
+                    <th className="px-5 pb-3 text-right text-[12px] font-semibold text-[#8a919e]">24h change</th>
+                    <th className="px-5 pb-3 text-right text-[12px] font-semibold text-[#8a919e]">Market cap</th>
+                    <th className="px-5 pb-3 text-right text-[12px] font-semibold text-[#8a919e]">Trade</th>
+                    <th className="px-5 pb-3 text-right text-[12px] font-semibold text-[#8a919e]">Watch</th>
                   </tr>
                 </thead>
                 <tbody>
                   {watchlist.map((coin, index) => (
                     <tr key={coin.id} className="border-b border-[#e9ecef] last:border-b-0">
-                      <td className="w-[250px] py-4">
+                      <td className="w-[250px] px-5 py-4">
                         <div className="flex items-center gap-4">
                           <CoinIcon coin={coin} index={index} />
                           <div>
@@ -342,11 +342,11 @@ function Dashboard() {
                           </div>
                         </div>
                       </td>
-                      <td className="py-4 text-right text-[13px] font-medium">{coin.price}</td>
-                      <td className="py-4 text-center">
+                      <td className="min-w-[150px] px-5 py-4 text-right text-[13px] font-medium">{coin.price}</td>
+                      <td className="px-5 py-4 text-center">
                         <MiniSparkline index={index} positive={coin.change24h >= 0} />
                       </td>
-                      <td className="py-4 text-right">
+                      <td className="px-5 py-4 text-right">
                         <span
                           className={`inline-flex rounded-full px-2.5 py-1 text-[12px] font-semibold ${
                             coin.change24h >= 0 ? "bg-[#e7f6ee] text-[#098551]" : "bg-[#fdecee] text-[#cf202f]"
@@ -355,11 +355,11 @@ function Dashboard() {
                           {coin.change}
                         </span>
                       </td>
-                      <td className="py-4 text-right text-[13px] font-medium">{getMarketCap(coin, index)}</td>
-                      <td className="py-4 text-right">
+                      <td className="px-5 py-4 text-right text-[13px] font-medium">{getMarketCap(coin, index)}</td>
+                      <td className="px-5 py-4 text-right">
                         <button type="button" className="rounded-full bg-[#0052ff] px-4 py-1.5 text-[13px] font-bold text-white">Buy</button>
                       </td>
-                      <td className="py-4 text-right text-[#0052ff]">★</td>
+                      <td className="px-5 py-4 text-right text-[#0052ff]">★</td>
                     </tr>
                   ))}
                 </tbody>
