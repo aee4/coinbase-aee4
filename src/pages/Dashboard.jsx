@@ -1,16 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
 import { Navigate } from "react-router-dom";
 import {
+  ArrowDown,
   Bell,
   BookOpen,
   ArrowLeftRight,
+  ArrowUp,
+  ChevronDown,
+  ChevronRight,
+  CircleDollarSign,
   CreditCard,
+  Eye,
   Globe2,
-  Grid3X3,
+  HelpCircle,
   Home,
+  Minus,
   MoreHorizontal,
+  MoreVertical,
+  Plus,
   Search,
-  Send,
   GraduationCap,
   TrendingUp,
   Wallet,
@@ -34,6 +42,8 @@ const chartPaths = [
   "M2 12 L8 18 L14 14 L20 24 L26 17 L32 21 L38 10 L44 15 L50 8 L56 11",
   "M2 28 L8 20 L14 25 L20 14 L26 17 L32 8 L38 12 L44 6 L50 10 L56 3",
 ];
+
+const assetChartColors = ["#f7931a", "#0052ff", "#8247e5", "#0052ff", "#098551", "#cf202f"];
 
 const getCryptoArray = (responseData) => {
   if (Array.isArray(responseData)) {
@@ -96,35 +106,25 @@ const getInitials = (name, email) => {
     .toUpperCase();
 };
 
-const getMarketCap = (coin, index) => {
-  if (coin.marketCap) {
-    return coin.marketCap;
-  }
-
-  const mockCaps = ["$484.0B", "$198.1B", "$10.5B", "$3.5B", "$684.0M", "$421.8M"];
-  return mockCaps[index % mockCaps.length];
-};
-
-function MiniSparkline({ index, positive = true, large = false }) {
+function MiniSparkline({ index, positive = true, large = false, color }) {
   const path = chartPaths[index % chartPaths.length];
-  const stroke = positive ? "#098551" : "#cf202f";
-  const balancePath = "M4 31 C10 27 13 29 18 22 C23 15 28 19 33 13 C38 7 44 11 49 8 C53 6 55 3 57 2";
-  const balanceFill = `${balancePath} L57 38 L4 38 Z`;
+  const stroke = color || (positive ? "#098551" : "#cf202f");
+  const balancePath = "M1 30 C5 25 8 27 12 20 C16 13 20 16 24 18 C28 20 31 24 35 27 C39 31 43 25 47 20 C51 15 55 13 58 10 C62 7 65 12 69 9 C73 6 76 2 80 5 C84 8 87 3 90 7 C94 12 97 8 100 5";
 
   return (
     <svg
-      className={large ? "h-24 w-80 max-w-full" : "h-10 w-20"}
-      viewBox="0 0 58 38"
+      className={large ? "h-48 w-full" : "h-10 w-24"}
+      viewBox={large ? "0 0 100 38" : "0 0 58 38"}
       fill="none"
       aria-hidden="true"
     >
       {large ? (
         <>
-          <path d={balanceFill} fill="#0052ff" opacity="0.12" />
+          <path d={`${balancePath} L100 38 L1 38 Z`} fill="#0052ff" opacity="0.08" />
           <path
             d={balancePath}
             stroke="#0052ff"
-            strokeWidth="2.4"
+            strokeWidth="1.7"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -206,22 +206,22 @@ function Dashboard() {
   }, []);
 
   const initials = useMemo(() => getInitials(profile?.name, profile?.email), [profile]);
+  const visibleAssets = watchlist.slice(0, 4);
+  const priceAssets = topMovers.length > 0 ? topMovers.slice(0, 3) : watchlist.slice(0, 3);
 
   if (shouldRedirect) {
     return <Navigate to="/signin" replace />;
   }
 
   return (
-    <div className="min-h-screen bg-[#0052ff] p-2 text-[#0a0b0d]">
-      <div className="grid min-h-[calc(100vh-16px)] overflow-hidden rounded-[22px] bg-white lg:grid-cols-[214px_minmax(0,1fr)_330px]">
+    <div className="min-h-screen bg-white text-[#0a0b0d]">
+      <div className="grid min-h-screen lg:grid-cols-[245px_minmax(0,1fr)]">
         <aside className="hidden border-r border-[#e6e8eb] bg-white lg:flex lg:flex-col">
-          <div className="flex h-16 items-center px-7">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0052ff] text-[22px] font-bold text-white">
-              C
-            </div>
+          <div className="flex h-[70px] items-center px-6">
+            <span className="text-[27px] font-bold tracking-[-0.05em] text-[#0052ff]">coinbase</span>
           </div>
 
-          <nav className="flex-1 space-y-2 px-4 py-4">
+          <nav className="flex-1 space-y-3 px-3 py-4">
             {navItems.map((item) => {
               const Icon = item.icon;
 
@@ -229,66 +229,77 @@ function Dashboard() {
                 <button
                   key={item.label}
                   type="button"
-                  className={`flex h-11 w-full items-center gap-3 rounded-[8px] border-l-[3px] px-4 text-left text-[14px] font-semibold ${
+                  className={`group flex h-14 w-full items-center gap-4 rounded-[18px] px-5 text-left text-[14px] font-semibold transition-all duration-200 active:scale-[0.98] ${
                     item.active
-                      ? "border-[#0052ff] bg-[#f4f8ff] text-[#0052ff]"
-                      : "border-transparent text-[#1f2937] hover:bg-[#f5f7fa]"
+                      ? "bg-[#f2f6ff] text-[#0052ff] shadow-[0_10px_26px_rgba(0,82,255,0.08)]"
+                      : "border-transparent text-[#1f2937] hover:bg-[#f5f7fa] hover:text-[#0052ff]"
                   }`}
                 >
-                  <Icon size={19} strokeWidth={item.active ? 3 : 2.4} />
+                  <span
+                    className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-200 ${
+                      item.active ? "bg-[#0052ff] text-white shadow-sm" : "group-hover:bg-white group-hover:shadow-sm"
+                    }`}
+                  >
+                    <Icon size={18} strokeWidth={2.4} />
+                  </span>
                   {item.label}
                 </button>
               );
             })}
           </nav>
 
-          <div className="border-t border-[#eef0f3] p-5">
-            <button
-              type="button"
-              className="flex w-full items-center gap-3 rounded-[8px] p-2 text-left hover:bg-[#f5f7fa]"
-              onClick={() => setIsProfileOpen((isOpen) => !isOpen)}
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0052ff] text-[13px] font-bold text-white">
-                {initials}
+          <div className="border-t border-[#eef0f3] px-5 py-6">
+            <div className="mb-9 flex items-center justify-between text-[13px] font-medium text-[#5b616e]">
+              <span>Advanced</span>
+              <span className="flex h-5 w-9 items-center justify-end rounded-full bg-[#0052ff] p-0.5">
+                <span className="h-4 w-4 rounded-full bg-white shadow-sm" />
+              </span>
+            </div>
+            <div className="flex items-end justify-between">
+              <div>
+                <p className="text-[13px] font-bold">Get the app</p>
+                <p className="mt-1 text-[12px] leading-4 text-[#5b616e]">
+                  Access your assets
+                  <br />
+                  anywhere
+                </p>
               </div>
-              <div className="min-w-0">
-                <p className="truncate text-[13px] font-semibold">{profile?.name || "Coinbase user"}</p>
-                <p className="truncate text-[12px] text-[#5b616e]">{profile?.email || "Loading profile"}</p>
+              <div className="grid h-10 w-10 grid-cols-4 gap-px rounded-[4px] bg-white p-1 shadow-[inset_0_0_0_1px_#d9dee7]">
+                {Array.from({ length: 16 }).map((_, index) => (
+                  <span key={index} className={index % 3 === 0 || index === 5 ? "bg-black" : "bg-[#d9dee7]"} />
+                ))}
               </div>
-            </button>
+            </div>
           </div>
         </aside>
 
-        <main className="min-w-0 bg-white">
-          <header className="flex h-16 items-center gap-4 border-b border-[#e6e8eb] px-5 md:px-6">
-            <h1 className="hidden text-[16px] font-semibold md:block">Home</h1>
-            <div className="mx-auto flex h-10 w-full max-w-[290px] items-center gap-3 rounded-full bg-[#f0f2f5] px-4 text-[#5b616e]">
+        <main className="min-w-0 bg-[#fbfcfe]">
+          <header className="flex h-[70px] items-center gap-4 border-b border-[#e6e8eb] bg-white px-5 md:px-7">
+            <h1 className="mr-auto text-[21px] font-semibold tracking-[-0.03em]">Home</h1>
+            <div className="hidden h-10 w-full max-w-[270px] items-center gap-3 rounded-full bg-[#f4f5f8] px-4 text-[#5b616e] md:flex">
               <Search size={18} />
               <input
-                className="w-full bg-transparent text-[14px] outline-none placeholder:text-[#6b7280]"
-                placeholder="Search"
+                className="w-full bg-transparent text-[13px] outline-none placeholder:text-[#6b7280]"
+                placeholder="Search for an asset"
                 type="search"
               />
             </div>
-            <button type="button" className="hidden h-10 items-center rounded-full bg-[#0052ff] px-5 text-[13px] font-bold text-white md:flex">
-              Buy & Sell
-            </button>
-            <button type="button" className="hidden h-10 items-center rounded-full bg-[#eef0f3] px-5 text-[13px] font-bold md:flex">
-              Send & Receive
-            </button>
-            <button type="button" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f5f7fa]">
+            <button type="button" className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#111827] shadow-[0_0_0_1px_#e6e8eb] transition-all duration-200 hover:bg-[#eef4ff] hover:text-[#0052ff] active:scale-95">
               <Bell size={18} />
             </button>
-            <button type="button" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f5f7fa]">
-              <Grid3X3 size={18} />
+            <button type="button" className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#111827] shadow-[0_0_0_1px_#e6e8eb] transition-all duration-200 hover:bg-[#eef4ff] hover:text-[#0052ff] active:scale-95">
+              <HelpCircle size={18} />
             </button>
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setIsProfileOpen((isOpen) => !isOpen)}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0052ff] text-[13px] font-bold text-white"
+                className="flex h-10 items-center gap-2 rounded-full text-[13px] font-bold text-white transition-all duration-200 active:scale-95"
               >
-                {initials}
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0052ff] shadow-[0_6px_16px_rgba(0,82,255,0.22)]">
+                  {initials}
+                </span>
+                <ChevronDown size={16} className="text-[#111827]" />
               </button>
               {isProfileOpen && (
                 <div className="absolute right-0 top-12 z-20 w-64 rounded-[8px] border border-[#e6e8eb] bg-white p-4 shadow-xl">
@@ -299,139 +310,179 @@ function Dashboard() {
             </div>
           </header>
 
-          <section className="border-b border-[#e6e8eb] px-5 py-6 md:px-6">
-            <div className="grid gap-6 rounded-[8px] border border-[#e6e8eb] bg-[#f9fafb] p-5 shadow-[0_1px_2px_rgba(10,11,13,0.04)] md:grid-cols-[1fr_330px] md:items-center">
-              <div>
-                <p className="text-[12px] font-semibold text-[#5b616e]">My balance</p>
-                <p className="mt-1 text-[30px] font-semibold tracking-[-0.03em]">$11,308.91</p>
-              </div>
-              <div className="justify-self-start md:justify-self-end">
-                <MiniSparkline index={1} large />
-              </div>
-            </div>
-          </section>
+          <div className="grid gap-6 px-5 py-5 md:px-7 xl:grid-cols-[minmax(0,1fr)_350px]">
+            <div className="space-y-5">
+              <section className="rounded-[12px] border border-[#e1e6ef] bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.03)]">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-[17px] font-semibold">Your balance</p>
+                      <Eye size={17} className="text-[#111827]" />
+                    </div>
+                    <p className="mt-4 text-[39px] font-medium tracking-[-0.05em]">$12,345.67</p>
+                    <div className="mt-3 flex items-center gap-3 text-[14px]">
+                      <span className="font-semibold text-[#098551]">↗ $1,234.56 (11.11%)</span>
+                      <span className="text-[#5b616e]">All time</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-7 pt-14 text-[14px] font-medium text-[#5b616e]">
+                    {["1H", "1D", "1W", "1M", "1Y", "ALL"].map((range) => (
+                      <button
+                        key={range}
+                        type="button"
+                        className={`rounded-full px-3 py-1 transition-colors duration-200 ${
+                          range === "1M" ? "bg-[#eef4ff] text-[#0052ff]" : "hover:bg-[#f5f7fa]"
+                        }`}
+                      >
+                        {range}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-5">
+                  <MiniSparkline index={1} large />
+                </div>
+              </section>
 
-          <section className="px-5 py-6 md:px-6">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-[16px] font-semibold tracking-[-0.02em]">Watchlist</h2>
-              <button type="button" className="text-[13px] font-bold text-[#0052ff]">See all</button>
-            </div>
+              <section className="overflow-hidden rounded-[12px] border border-[#e1e6ef] bg-white shadow-[0_8px_30px_rgba(15,23,42,0.03)]">
+                <div className="flex items-center justify-between px-6 py-5">
+                  <h2 className="text-[18px] font-semibold">Your assets</h2>
+                  <button type="button" className="flex h-10 items-center gap-2 rounded-full border border-[#e1e6ef] px-4 text-[14px] font-semibold transition-colors duration-200 hover:bg-[#f5f7fa]">
+                    Balance
+                    <ChevronDown size={16} />
+                  </button>
+                </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[680px] border-collapse">
-                <thead>
-                  <tr className="border-b border-[#eef0f3]">
-                    <th className="w-[250px] px-5 pb-3 text-left text-[12px] font-semibold text-[#8a919e]">Asset</th>
-                    <th className="min-w-[150px] px-5 pb-3 text-right text-[12px] font-semibold text-[#8a919e]">Price</th>
-                    <th className="px-5 pb-3 text-center text-[12px] font-semibold text-[#8a919e]">Chart</th>
-                    <th className="px-5 pb-3 text-right text-[12px] font-semibold text-[#8a919e]">24h change</th>
-                    <th className="px-5 pb-3 text-right text-[12px] font-semibold text-[#8a919e]">Market cap</th>
-                    <th className="px-5 pb-3 text-right text-[12px] font-semibold text-[#8a919e]">Trade</th>
-                    <th className="px-5 pb-3 text-right text-[12px] font-semibold text-[#8a919e]">Watch</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {watchlist.map((coin, index) => (
-                    <tr key={coin.id} className="border-b border-[#e9ecef] last:border-b-0">
-                      <td className="w-[250px] px-5 py-4">
-                        <div className="flex items-center gap-4">
-                          <CoinIcon coin={coin} index={index} />
-                          <div>
-                            <p className="text-[13px] font-bold">{coin.name}</p>
-                            <p className="text-[12px] font-medium text-[#6b7280]">{coin.symbol}</p>
-                          </div>
+                <div>
+                  {visibleAssets.map((coin, index) => (
+                    <div key={coin.id} className="grid grid-cols-[minmax(170px,1.2fr)_130px_130px_105px_32px] items-center border-t border-[#eef0f3] px-6 py-4 transition-colors duration-200 hover:bg-[#fbfcff]">
+                      <div className="flex items-center gap-4">
+                        <CoinIcon coin={coin} index={index} />
+                        <div>
+                          <p className="text-[15px] font-semibold">{coin.name}</p>
+                          <p className="text-[14px] text-[#5b616e]">{coin.symbol}</p>
                         </div>
-                      </td>
-                      <td className="min-w-[150px] px-5 py-4 text-right text-[13px] font-medium">{coin.price}</td>
-                      <td className="px-5 py-4 text-center">
-                        <MiniSparkline index={index} positive={coin.change24h >= 0} />
-                      </td>
-                      <td className="px-5 py-4 text-right">
-                        <span
-                          className={`inline-flex rounded-full px-2.5 py-1 text-[12px] font-semibold ${
-                            coin.change24h >= 0 ? "bg-[#e7f6ee] text-[#098551]" : "bg-[#fdecee] text-[#cf202f]"
-                          }`}
-                        >
-                          {coin.change}
-                        </span>
-                      </td>
-                      <td className="px-5 py-4 text-right text-[13px] font-medium">{getMarketCap(coin, index)}</td>
-                      <td className="px-5 py-4 text-right">
-                        <button type="button" className="rounded-full bg-[#0052ff] px-4 py-1.5 text-[13px] font-bold text-white">Buy</button>
-                      </td>
-                      <td className="px-5 py-4 text-right text-[#0052ff]">★</td>
-                    </tr>
+                      </div>
+                      <MiniSparkline index={index} positive={coin.change24h >= 0} color={assetChartColors[index]} />
+                      <div>
+                        <p className="text-[15px] font-medium">{coin.price}</p>
+                        <p className="text-[14px] text-[#5b616e]">
+                          {index === 0 ? "0.081 BTC" : index === 1 ? "0.7321 ETH" : index === 2 ? "8.29 SOL" : "1,081.39 USDC"}
+                        </p>
+                      </div>
+                      <p className={`text-[15px] font-semibold ${coin.change24h >= 0 ? "text-[#098551]" : "text-[#cf202f]"}`}>
+                        {coin.change24h >= 0 ? "↗" : "↘"} {coin.change.replace("+", "")}
+                      </p>
+                      <button type="button" className="flex h-8 w-8 items-center justify-center rounded-full text-[#5b616e] transition-colors duration-200 hover:bg-[#f5f7fa] hover:text-[#0052ff]">
+                        <MoreVertical size={18} />
+                      </button>
+                    </div>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section className="border-t border-[#e6e8eb] px-5 py-6 md:px-6">
-            <p className="text-[18px] font-medium text-[#5b616e]">Monday, February 1</p>
-            <div className="mt-6 grid gap-5 md:grid-cols-[320px_1fr]">
-              <div className="h-40 rounded-[8px] bg-[#c7d7d5] p-4">
-                <div className="h-full w-28 bg-[#f5ca22] shadow-[38px_20px_0_#ff8f4a,76px_42px_0_#0052ff]" />
-              </div>
-              <div className="flex flex-col justify-center">
-                <div className="mb-4 flex items-center gap-3 text-[13px] font-semibold">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0052ff] text-white">?</span>
-                  Coinbase Learn
-                  <span className="font-medium text-[#6b7280]">Explainers</span>
                 </div>
-                <h3 className="text-[16px] font-semibold">What is a non-fungible token (NFT)?</h3>
-                <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#5b616e]">
-                  Non-fungible tokens are unique crypto assets. Learn how they work and why people collect them.
-                </p>
-              </div>
+
+                <div className="px-6 py-4">
+                  <button type="button" className="h-12 w-full rounded-full bg-[#f4f5f8] text-[14px] font-semibold transition-colors duration-200 hover:bg-[#eef0f3]">
+                    View all assets
+                  </button>
+                </div>
+              </section>
+
+              <section className="rounded-[12px] border border-[#e1e6ef] bg-white p-5">
+                <h2 className="text-[17px] font-semibold">Explore Coinbase</h2>
+                <div className="mt-5 grid gap-4 md:grid-cols-3">
+                  {["Recurring buys", "Learn rewards", "Wallet"].map((label, index) => (
+                    <div key={label} className="h-28 rounded-[8px] bg-gradient-to-br from-[#eef4ff] to-[#f7f8fb] p-4">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0052ff] text-white">
+                        {index === 0 ? <TrendingUp size={18} /> : index === 1 ? <BookOpen size={18} /> : <Wallet size={18} />}
+                      </div>
+                      <p className="mt-4 text-[14px] font-semibold">{label}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
             </div>
-          </section>
+
+            <aside className="space-y-4">
+              <section className="grid grid-cols-4 gap-4 rounded-[12px] border border-[#e1e6ef] bg-white p-6">
+                {[
+                  { label: "Buy", icon: Plus },
+                  { label: "Sell", icon: Minus },
+                  { label: "Send", icon: ArrowUp },
+                  { label: "Receive", icon: ArrowDown },
+                ].map((action) => {
+                  const Icon = action.icon;
+
+                  return (
+                    <button key={action.label} type="button" className="group flex flex-col items-center gap-3 text-[13px] font-medium">
+                      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#0052ff] text-white shadow-[0_8px_18px_rgba(0,82,255,0.25)] transition-transform duration-200 group-hover:-translate-y-0.5">
+                        <Icon size={22} />
+                      </span>
+                      {action.label}
+                    </button>
+                  );
+                })}
+              </section>
+
+              <section className="rounded-[12px] border border-[#e1e6ef] bg-white p-5">
+                <h2 className="text-[18px] font-semibold">For you</h2>
+                <div className="mt-5 space-y-5">
+                  {[
+                    { title: "Earn 4.1% APY on USDC", body: "Add USDC to your balance to earn monthly rewards", icon: CircleDollarSign },
+                    { title: "Learn and earn", body: "Earn $3 in BTC by watching a short video", icon: BookOpen },
+                    { title: "Get started with Web3", body: "Explore decentralized apps and more", icon: Globe2 },
+                  ].map((item) => {
+                    const Icon = item.icon;
+
+                    return (
+                      <button key={item.title} type="button" className="flex w-full items-center gap-4 rounded-[8px] text-left transition-colors duration-200 hover:bg-[#f8faff]">
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#eef4ff] text-[#0052ff]">
+                          <Icon size={22} />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-[14px] font-semibold">{item.title}</span>
+                          <span className="mt-1 block text-[13px] leading-5 text-[#5b616e]">{item.body}</span>
+                        </span>
+                        <ChevronRight size={18} className="text-[#5b616e]" />
+                      </button>
+                    );
+                  })}
+                </div>
+                <button type="button" className="mt-4 w-full text-center text-[14px] font-semibold text-[#0052ff]">View more</button>
+              </section>
+
+              <section className="rounded-[12px] border border-[#e1e6ef] bg-white p-5">
+                <div className="mb-5 flex items-center justify-between">
+                  <h2 className="text-[18px] font-semibold">Prices</h2>
+                  <button type="button" className="flex h-9 items-center gap-1 rounded-full border border-[#e1e6ef] px-3 text-[13px] font-semibold">
+                    Watchlist
+                    <ChevronDown size={14} />
+                  </button>
+                </div>
+                <div className="space-y-5">
+                  {priceAssets.map((coin, index) => (
+                    <div key={coin.id} className="grid grid-cols-[1fr_90px_86px] items-center gap-3">
+                      <div className="flex items-center gap-3">
+                        <CoinIcon coin={coin} index={index} />
+                        <div>
+                          <p className="text-[14px] font-semibold">{coin.name}</p>
+                          <p className="text-[13px] text-[#5b616e]">{coin.symbol}</p>
+                        </div>
+                      </div>
+                      <MiniSparkline index={index} positive={coin.change24h >= 0} color={assetChartColors[index]} />
+                      <div className="text-right">
+                        <p className="text-[14px] font-medium">{coin.price}</p>
+                        <p className={`mt-1 text-[13px] font-semibold ${coin.change24h >= 0 ? "text-[#098551]" : "text-[#cf202f]"}`}>
+                          {coin.change24h >= 0 ? "↗" : "↘"} {coin.change.replace("+", "")}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button type="button" className="mt-6 w-full text-center text-[14px] font-semibold text-[#0052ff]">View all assets</button>
+              </section>
+            </aside>
+          </div>
         </main>
-
-        <aside className="hidden border-l border-[#d9dee7] bg-[#fbfcfd] px-5 py-6 lg:block">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-[16px] font-semibold">Top movers</h2>
-            <button type="button" className="text-[13px] font-bold text-[#0052ff]">See all</button>
-          </div>
-
-          <div className="rounded-[8px] border border-[#e6e8eb] bg-white px-4 py-2">
-            {topMovers.map((coin, index) => (
-              <div key={coin.id} className="flex items-center gap-3 border-b border-[#eef0f3] py-3 last:border-b-0">
-                <CoinIcon coin={coin} index={index + 5} />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13px] font-bold">{coin.name}</p>
-                  <p className="text-[12px] font-medium text-[#6b7280]">{coin.symbol}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[13px] font-medium">{coin.price}</p>
-                  <p className={`mt-1 text-[12px] font-semibold ${coin.change24h >= 0 ? "text-[#098551]" : "text-[#cf202f]"}`}>
-                    {coin.change}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </aside>
-
-        <div className="fixed bottom-4 left-4 right-4 z-10 flex justify-around rounded-full border border-[#e6e8eb] bg-white p-2 shadow-lg lg:hidden">
-          {navItems.slice(0, 5).map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <button
-                key={item.label}
-                type="button"
-                className={`flex h-11 w-11 items-center justify-center rounded-full ${item.active ? "bg-[#eef4ff] text-[#0052ff]" : "text-[#5b616e]"}`}
-                aria-label={item.label}
-              >
-                <Icon size={20} />
-              </button>
-            );
-          })}
-          <button type="button" className="flex h-11 w-11 items-center justify-center rounded-full text-[#0052ff]" aria-label="Send">
-            <Send size={20} />
-          </button>
-        </div>
       </div>
     </div>
   );
