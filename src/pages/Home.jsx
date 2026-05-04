@@ -87,10 +87,12 @@ function Home() {
                 const tradable = getCryptoArray(cryptoResponse.data).slice(0, 6).map(normalizeCrypto);
                 const gainers = getCryptoArray(gainersResponse.data)
                     .map(normalizeCrypto)
-                    .sort((firstCoin, secondCoin) => secondCoin.change24h - firstCoin.change24h);
+                    .sort((firstCoin, secondCoin) => secondCoin.change24h - firstCoin.change24h)
+                    .slice(0, 6);
                 const newListings = getCryptoArray(newResponse.data)
                     .map(normalizeCrypto)
-                    .sort((firstCoin, secondCoin) => getDateValue(secondCoin) - getDateValue(firstCoin));
+                    .sort((firstCoin, secondCoin) => getDateValue(secondCoin) - getDateValue(firstCoin))
+                    .slice(0, 6);
 
                 if (isMounted) {
                     setTradableCrypto(tradable);
