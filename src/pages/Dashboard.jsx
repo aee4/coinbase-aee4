@@ -54,9 +54,9 @@ const derivativeRows = [
 
 function CoinbaseMark() {
   return (
-    <div className="relative h-10 w-10">
-      <div className="absolute inset-0 rounded-full border-[10px] border-[#0052ff]" />
-      <div className="absolute right-0 top-1/2 h-2.5 w-6 -translate-y-1/2 bg-white" />
+    <div className="relative h-8 w-8">
+      <div className="absolute inset-0 rounded-full border-[8px] border-[#0052ff]" />
+      <div className="absolute right-0 top-1/2 h-2 w-5 -translate-y-1/2 bg-white" />
     </div>
   );
 }
@@ -102,34 +102,37 @@ function UnsupportedIllustration() {
 
 function WatchlistIllustration() {
   return (
-    <div className="relative mx-auto h-[74px] w-[74px]" aria-hidden="true">
-      <span className="absolute left-7 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-[#f4d35e] text-[27px] font-semibold text-[#0a0b0d]">+</span>
-      <span className="absolute left-1 top-10 h-8 w-8 rounded-full bg-[#5a8bff]" />
-      <span className="absolute right-0 top-1 h-8 w-8 rounded-full bg-[#4f5866]" />
-      <span className="absolute left-2 top-10 h-8 w-8 rounded-full bg-[#0a0b0d]/70" />
-      <span className="absolute right-0 top-1 h-8 w-8 rounded-full bg-[#0a0b0d]/70" />
+    <div className="relative mx-auto h-[38px] w-[38px]" aria-hidden="true">
+      <span className="absolute left-[14px] top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-[#f4d35e] text-[15px] font-semibold text-[#0a0b0d]">+</span>
+      <span className="absolute left-0 top-5 h-4 w-4 rounded-full bg-[#5a8bff]" />
+      <span className="absolute right-0 top-0 h-4 w-4 rounded-full bg-[#4f5866]" />
+      <span className="absolute left-0.5 top-5 h-4 w-4 rounded-full bg-[#0a0b0d]/70" />
+      <span className="absolute right-0 top-0 h-4 w-4 rounded-full bg-[#0a0b0d]/70" />
     </div>
   );
 }
 
 function SideRail() {
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 flex w-[92px] flex-col border-r border-[#e6e8eb] bg-white">
-      <div className="flex h-[78px] items-center justify-center">
+    <aside className="fixed inset-y-0 left-0 z-30 flex w-16 flex-col border-r border-[#e6e8eb] bg-white">
+      <div className="flex h-14 items-center justify-center">
         <CoinbaseMark />
       </div>
-      <nav className="flex flex-1 flex-col items-center gap-5 pt-4">
+      <nav className="flex flex-1 flex-col items-center gap-4 pt-3">
         {navItems.map(({ label, icon: Icon, active }) => (
-          <button key={label} type="button" aria-label={label} className={`flex h-[64px] w-[64px] items-center justify-center rounded-full transition-colors ${active ? "bg-[#eef4ff] text-[#0052ff]" : "text-[#0a0b0d] hover:bg-[#f7f8fa]"}`}>
-            <Icon size={25} strokeWidth={active ? 0 : 2.5} fill={active ? "currentColor" : "none"} />
+          <button key={label} type="button" aria-label={label} className={`group relative flex h-11 w-11 items-center justify-center rounded-full transition-colors ${active ? "bg-[#eef4ff] text-[#0052ff]" : "text-[#0a0b0d] hover:bg-[#f7f8fa]"}`}>
+            <Icon size={20} strokeWidth={active ? 0 : 2.5} fill={active ? "currentColor" : "none"} />
+            <span className="pointer-events-none absolute left-1/2 top-full z-50 mt-1 -translate-x-1/2 rounded bg-[#20242d] px-2 py-1 text-[11px] font-semibold text-white opacity-0 shadow-sm transition-opacity group-hover:opacity-100">
+              {label}
+            </span>
           </button>
         ))}
       </nav>
-      <div className="pb-5 text-center text-[#0a0b0d]">
-        <CandlestickChart className="mx-auto" size={25} strokeWidth={2.4} />
-        <p className="mt-3 text-[12px] font-bold">Advanced</p>
-        <button className="mx-auto mt-4 flex h-[26px] w-[48px] items-center rounded-full bg-[#dfe3eb] p-1" type="button" aria-label="Advanced mode">
-          <span className="h-[20px] w-[20px] rounded-full bg-white shadow-sm" />
+      <div className="pb-4 text-center text-[#0a0b0d]">
+        <CandlestickChart className="mx-auto" size={20} strokeWidth={2.4} />
+        <p className="mt-2 text-[10px] font-bold">Advanced</p>
+        <button className="mx-auto mt-3 flex h-[22px] w-10 items-center rounded-full bg-[#dfe3eb] p-1" type="button" aria-label="Advanced mode">
+          <span className="h-4 w-4 rounded-full bg-white shadow-sm" />
         </button>
       </div>
     </aside>
@@ -140,28 +143,28 @@ function Header({ profile, profileOpen, profileError, onProfileClick, onLogout }
   const initials = useMemo(() => getInitials(profile?.name, profile?.email), [profile]);
 
   return (
-    <header className="sticky top-0 z-20 grid h-[78px] grid-cols-[1fr_auto] items-center border-b border-[#e6e8eb] bg-white px-9">
-      <h1 className="text-[31px] font-semibold tracking-[-0.04em] text-[#0a0b0d]">Home</h1>
+    <header className="sticky top-0 z-20 grid h-14 grid-cols-[1fr_auto] items-center border-b border-[#e6e8eb] bg-white px-6">
+      <h1 className="text-[18px] font-semibold tracking-[-0.03em] text-[#0a0b0d]">Home</h1>
       <div className="flex items-center gap-3">
-        <label className="flex h-[48px] w-[430px] max-w-[37vw] items-center gap-4 rounded-full bg-[#f4f5f8] px-6">
-          <Search size={22} className="text-[#0a0b0d]" strokeWidth={2.5} />
-          <input className="min-w-0 flex-1 bg-transparent text-[20px] font-medium text-[#0a0b0d] outline-none placeholder:text-[#6b7280]" placeholder="Search" type="search" />
+        <label className="flex h-10 w-[360px] max-w-[34vw] items-center gap-3 rounded-full bg-[#f4f5f8] px-5">
+          <Search size={18} className="text-[#0a0b0d]" strokeWidth={2.5} />
+          <input className="min-w-0 flex-1 bg-transparent text-[16px] font-medium text-[#0a0b0d] outline-none placeholder:text-[#6b7280]" placeholder="Search" type="search" />
         </label>
         {[
           { label: "Notifications", icon: Bell },
           { label: "Help", icon: CircleHelp },
           { label: "Apps", icon: Grid3X3 },
         ].map(({ label, icon: Icon }) => (
-          <button key={label} type="button" aria-label={label} className="flex h-[48px] w-[48px] items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d] transition-colors hover:bg-[#e9edf5]">
-            <Icon size={21} />
+          <button key={label} type="button" aria-label={label} className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d] transition-colors hover:bg-[#e9edf5]">
+            <Icon size={18} />
           </button>
         ))}
         <div className="relative">
-          <button onClick={onProfileClick} className="flex h-[48px] w-[48px] items-center justify-center rounded-full bg-[#0aa7d6] text-[19px] font-medium text-black" type="button" aria-label="Profile">
+          <button onClick={onProfileClick} className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0aa7d6] text-[16px] font-medium text-black" type="button" aria-label="Profile">
             {initials}
           </button>
           {profileOpen && (
-            <div className="absolute right-0 top-[60px] z-40 w-[280px] rounded-[12px] border border-[#e6e8eb] bg-white p-4 text-left shadow-[0_14px_40px_rgba(15,23,42,0.14)]">
+            <div className="absolute right-0 top-12 z-40 w-[280px] rounded-[12px] border border-[#e6e8eb] bg-white p-4 text-left shadow-[0_14px_40px_rgba(15,23,42,0.14)]">
               <p className="text-[16px] font-bold text-[#0a0b0d]">{profile?.name || "Coinbase user"}</p>
               <p className="mt-1 break-all text-[14px] font-medium text-[#5b616e]">{profile?.email || (profileError ? "Unable to load profile" : "Loading profile")}</p>
               <button onClick={onLogout} type="button" className="mt-4 h-10 w-full rounded-full bg-[#f4f5f8] text-[14px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
@@ -177,17 +180,17 @@ function Header({ profile, profileOpen, profileError, onProfileClick, onLogout }
 
 function SectionArrow({ label }) {
   return (
-    <button type="button" aria-label={label} className="absolute right-9 top-8 flex h-12 w-12 items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d] hover:bg-[#e9edf5]">
-      <ArrowRight size={25} />
+    <button type="button" aria-label={label} className="absolute right-6 top-5 flex h-9 w-9 items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d] hover:bg-[#e9edf5]">
+      <ArrowRight size={20} />
     </button>
   );
 }
 
 function SummarySection() {
   return (
-    <section className="border-b border-[#e6e8eb] px-9 py-7">
-      <h2 className="text-[42px] font-medium tracking-[-0.06em] text-[#0a0b0d]">GHS 0.00</h2>
-      <div className="mt-9 space-y-5">
+    <section className="border-b border-[#e6e8eb] px-6 py-5">
+      <h2 className="text-[30px] font-medium tracking-[-0.05em] text-[#0a0b0d]">GHS 0.00</h2>
+      <div className="mt-6 space-y-3.5">
         {[
           { label: "Crypto", value: "GHS 0.00", icon: Coins },
           { label: "Cash", value: "Deposit", detail: "3.35% APY", icon: WalletCards, accent: true },
@@ -198,12 +201,12 @@ function SummarySection() {
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d]">
                 <Icon size={20} strokeWidth={2.4} />
               </span>
-              <span className="text-[20px] font-bold text-[#0a0b0d]">
+              <span className="text-[17px] font-bold text-[#0a0b0d]">
                 {label}
                 {detail && <span className="font-medium text-[#00a86b]"> · {detail}</span>}
               </span>
             </span>
-            <span className={`text-[19px] font-bold ${accent ? "text-[#0052ff]" : "text-[#0a0b0d]"}`}>{value}</span>
+            <span className={`text-[16px] font-bold ${accent ? "text-[#0052ff]" : "text-[#0a0b0d]"}`}>{value}</span>
             <ArrowRight className="text-[#7c8595]" size={20} />
           </button>
         ))}
@@ -214,14 +217,14 @@ function SummarySection() {
 
 function WatchlistSection() {
   return (
-    <section className="relative border-b border-[#e6e8eb] px-9 py-8">
+    <section className="relative border-b border-[#e6e8eb] px-6 py-6">
       <SectionArrow label="Open watchlist" />
-      <h2 className="text-[24px] font-bold text-[#0a0b0d]">Watchlist</h2>
-      <div className="mx-auto mt-8 flex max-w-[760px] flex-col items-center text-center">
+      <h2 className="text-[20px] font-bold text-[#0a0b0d]">Watchlist</h2>
+      <div className="mx-auto mt-5 flex max-w-[680px] flex-col items-center text-center">
         <WatchlistIllustration />
-        <h3 className="mt-4 text-[23px] font-bold tracking-[-0.02em] text-[#0a0b0d]">Build your watchlist</h3>
-        <p className="mt-3 text-[18px] font-medium text-[#6b7280]">Keep track of crypto prices by adding assets to your watchlist</p>
-        <button type="button" className="mt-8 h-12 w-full rounded-full bg-[#f4f5f8] text-[18px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
+        <h3 className="mt-3 text-[15px] font-bold tracking-[-0.01em] text-[#0a0b0d]">Build your watchlist</h3>
+        <p className="mt-2 text-[14px] font-medium text-[#6b7280]">Keep track of crypto prices by adding assets to your watchlist</p>
+        <button type="button" className="mt-5 h-10 w-full rounded-full bg-[#f4f5f8] text-[15px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
           Add to watchlist
         </button>
       </div>
@@ -231,11 +234,11 @@ function WatchlistSection() {
 
 function CryptoSection() {
   return (
-    <section className="relative border-b border-[#e6e8eb] px-9 py-7">
+    <section className="relative border-b border-[#e6e8eb] px-6 py-5">
       <SectionArrow label="Open crypto" />
-      <h2 className="text-[26px] font-bold tracking-[-0.03em] text-[#0a0b0d]">Crypto</h2>
-      <p className="mt-2 text-[21px] font-medium text-[#5b616e]">Trade millions of assets</p>
-      <div className="mt-12">
+      <h2 className="text-[22px] font-bold tracking-[-0.03em] text-[#0a0b0d]">Crypto</h2>
+      <p className="mt-1.5 text-[17px] font-medium text-[#5b616e]">Trade millions of assets</p>
+      <div className="mt-8">
         {cryptoRows.map((coin) => (
           <div key={coin.name} className={`grid h-[72px] grid-cols-[1fr_76px] items-center gap-4 ${coin.muted ? "bg-[#f7f8fa]" : ""}`}>
             <div className="flex items-center gap-5">
@@ -251,7 +254,7 @@ function CryptoSection() {
           </div>
         ))}
       </div>
-      <button type="button" className="mt-5 h-12 w-full rounded-full bg-[#f4f5f8] text-[18px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
+      <button type="button" className="mt-4 h-10 w-full rounded-full bg-[#f4f5f8] text-[15px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
         Explore all crypto
       </button>
     </section>
@@ -260,13 +263,13 @@ function CryptoSection() {
 
 function CashSection() {
   return (
-    <section className="relative border-b border-[#e6e8eb] px-9 py-8">
+    <section className="relative border-b border-[#e6e8eb] px-6 py-6">
       <SectionArrow label="Open cash" />
-      <h2 className="text-[26px] font-bold tracking-[-0.03em] text-[#0a0b0d]">Cash</h2>
-      <p className="mt-3 text-[21px] font-medium text-[#5b616e]">
+      <h2 className="text-[22px] font-bold tracking-[-0.03em] text-[#0a0b0d]">Cash</h2>
+      <p className="mt-2 text-[17px] font-medium text-[#5b616e]">
         Earn <span className="text-[#00c176]">3.35% APY</span>
       </p>
-      <button type="button" className="mt-14 h-12 w-full rounded-full bg-[#f4f5f8] text-[18px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
+      <button type="button" className="mt-10 h-10 w-full rounded-full bg-[#f4f5f8] text-[15px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
         Deposit cash
       </button>
     </section>
@@ -275,11 +278,11 @@ function CashSection() {
 
 function DerivativesSection() {
   return (
-    <section className="relative border-b border-[#e6e8eb] px-9 py-7">
+    <section className="relative border-b border-[#e6e8eb] px-6 py-5">
       <SectionArrow label="Open derivatives" />
-      <h2 className="text-[26px] font-bold tracking-[-0.03em] text-[#0a0b0d]">Derivatives</h2>
-      <p className="mt-2 text-[18px] font-medium text-[#5b616e]">Trade with up to 50x leverage</p>
-      <div className="mt-12">
+      <h2 className="text-[22px] font-bold tracking-[-0.03em] text-[#0a0b0d]">Derivatives</h2>
+      <p className="mt-1.5 text-[16px] font-medium text-[#5b616e]">Trade with up to 50x leverage</p>
+      <div className="mt-8">
         {derivativeRows.map((coin) => (
           <div key={coin.name} className={`grid h-[72px] grid-cols-[1fr_76px] items-center gap-4 ${coin.muted ? "bg-[#f7f8fa]" : ""}`}>
             <div className="flex items-center gap-5">
@@ -303,14 +306,14 @@ function DerivativesSection() {
 
 function FooterLinks() {
   return (
-    <footer className="px-9 py-9 text-[#5b616e]">
+    <footer className="px-6 py-6 text-[#5b616e]">
       <div className="flex flex-wrap items-center gap-6 text-[14px]">
         <a className="underline" href="#">Careers</a>
         <a className="underline" href="#">Legal & Privacy</a>
         <a className="underline" href="#">Accessibility Statement</a>
         <span>© 2026 Coinbase</span>
       </div>
-      <button type="button" className="mt-8 flex h-11 items-center gap-2 rounded-full bg-[#f4f5f8] px-4 text-[16px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
+      <button type="button" className="mt-6 flex h-10 items-center gap-2 rounded-full bg-[#f4f5f8] px-4 text-[15px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
         English <span className="text-[18px]">⌄</span>
       </button>
     </footer>
@@ -320,34 +323,34 @@ function FooterLinks() {
 function BuyPanel() {
   return (
     <aside className="border-l border-[#e6e8eb] bg-white">
-      <div className="sticky top-[78px]">
-        <section className="border-b border-[#e6e8eb] px-10 py-6">
-          <div className="inline-flex h-12 rounded-full bg-[#f4f5f8] p-1">
+      <div className="sticky top-14">
+        <section className="border-b border-[#e6e8eb] px-7 py-5">
+          <div className="inline-flex h-10 rounded-full bg-[#f4f5f8] p-1">
             {["Buy", "Sell", "Convert"].map((tab, index) => (
-              <button key={tab} type="button" className={`h-10 rounded-full px-6 text-[17px] font-bold ${index === 0 ? "bg-white text-[#0a0b0d] shadow-sm" : "text-[#20242d]"}`}>
+              <button key={tab} type="button" className={`h-8 rounded-full px-4 text-[14px] font-bold ${index === 0 ? "bg-white text-[#0a0b0d] shadow-sm" : "text-[#20242d]"}`}>
                 {tab}
               </button>
             ))}
           </div>
-          <div className="mt-14 flex flex-col items-center text-center">
+          <div className="mt-10 flex flex-col items-center text-center">
             <UnsupportedIllustration />
-            <h2 className="mt-10 text-[31px] font-bold tracking-[-0.04em] text-[#0a0b0d]">Buys not supported</h2>
-            <p className="mt-5 max-w-[390px] text-[18px] font-medium leading-[1.45] text-[#0a0b0d]">
+            <h2 className="mt-8 text-[25px] font-bold tracking-[-0.04em] text-[#0a0b0d]">Buys not supported</h2>
+            <p className="mt-4 max-w-[330px] text-[15px] font-medium leading-[1.45] text-[#0a0b0d]">
               Coinbase doesn't currently support buys in your country. Subscribe to our blog to be notified when we add support for your country.
             </p>
-            <button type="button" className="mt-10 h-[62px] w-full max-w-[360px] rounded-full bg-[#0052ff] text-[18px] font-bold text-white">
+            <button type="button" className="mt-8 h-12 w-full max-w-[300px] rounded-full bg-[#0052ff] text-[15px] font-bold text-white">
               Subscribe now
             </button>
           </div>
         </section>
-        <section className="space-y-7 px-10 py-10">
+        <section className="space-y-5 px-7 py-7">
           {[
             { label: "Send crypto", icon: ArrowUp },
             { label: "Receive crypto", icon: ArrowDown },
           ].map(({ label, icon: Icon }) => (
-            <button key={label} type="button" className="flex items-center gap-5 text-[22px] font-bold text-[#0a0b0d]">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0052ff] text-white">
-                <Icon size={25} />
+            <button key={label} type="button" className="flex items-center gap-4 text-[18px] font-bold text-[#0a0b0d]">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0052ff] text-white">
+                <Icon size={22} />
               </span>
               {label}
             </button>
@@ -400,7 +403,7 @@ function Dashboard() {
   return (
     <div className="min-h-screen bg-white font-sans text-[#0a0b0d]">
       <SideRail />
-      <div className="ml-[92px] min-h-screen">
+      <div className="ml-16 min-h-screen">
         <Header
           profile={profile}
           profileOpen={profileOpen}
@@ -408,7 +411,7 @@ function Dashboard() {
           onProfileClick={() => setProfileOpen((isOpen) => !isOpen)}
           onLogout={handleLogout}
         />
-        <main className="grid min-h-[calc(100vh-78px)] grid-cols-[minmax(0,1fr)_460px]">
+        <main className="grid min-h-[calc(100vh-56px)] grid-cols-[minmax(0,1fr)_420px]">
           <div className="min-w-0">
             <SummarySection />
             <WatchlistSection />
