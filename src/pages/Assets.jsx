@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   Bell,
   ChevronDown,
@@ -139,7 +139,7 @@ const getInitials = (name, email) => {
     .toUpperCase();
 };
 
-function Sidebar() {
+function Sidebar({ onLogout }) {
   return (
     <aside className="hidden border-r border-[#e6e8eb] bg-white lg:flex lg:flex-col">
       <div className="flex h-[70px] items-center px-6">
@@ -196,6 +196,13 @@ function Sidebar() {
             Download app
           </button>
         </div>
+        <button
+          type="button"
+          onClick={onLogout}
+          className="mt-4 h-10 w-full rounded-full text-[13px] font-semibold text-[#5b616e] transition-colors duration-200 hover:bg-[#f5f7fa] hover:text-[#cf202f]"
+        >
+          Log out
+        </button>
       </div>
     </aside>
   );
@@ -256,6 +263,7 @@ function Assets() {
   const [isProfileLoading, setIsProfileLoading] = useState(false);
   const [profileError, setProfileError] = useState("");
   const [shouldRedirect, setShouldRedirect] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let isMounted = true;
@@ -312,6 +320,16 @@ function Assets() {
     });
   };
 
+  const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout");
+    } finally {
+      localStorage.removeItem("token");
+      localStorage.removeItem("jwt");
+      navigate("/signin", { replace: true });
+    }
+  };
+
   const initials = useMemo(() => getInitials(profile?.name, profile?.email), [profile]);
 
   if (shouldRedirect) {
@@ -321,7 +339,7 @@ function Assets() {
   return (
     <div className="min-h-screen bg-white text-[#0a0b0d]">
       <div className="grid min-h-screen lg:grid-cols-[245px_minmax(0,1fr)]">
-        <Sidebar />
+        <Sidebar onLogout={handleLogout} />
 
         <main className="min-w-0 bg-[#fbfcfe]">
           <header className="flex h-[70px] items-center gap-4 border-b border-[#e6e8eb] bg-white px-5 md:px-7">

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Navigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   ArrowDown,
   Bell,
@@ -169,6 +168,7 @@ function Dashboard() {
   const [isProfileLoading, setIsProfileLoading] = useState(false);
   const [profileError, setProfileError] = useState("");
   const [shouldRedirect, setShouldRedirect] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let isMounted = true;
@@ -238,6 +238,16 @@ function Dashboard() {
     });
   };
 
+  const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout");
+    } finally {
+      localStorage.removeItem("token");
+      localStorage.removeItem("jwt");
+      navigate("/signin", { replace: true });
+    }
+  };
+
   const initials = useMemo(() => getInitials(profile?.name, profile?.email), [profile]);
   const visibleAssets = watchlist.slice(0, 4);
   const priceAssets = topMovers.length > 0 ? topMovers.slice(0, 3) : watchlist.slice(0, 3);
@@ -304,6 +314,13 @@ function Dashboard() {
                 Download app
               </button>
             </div>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="mt-4 h-10 w-full rounded-full text-[13px] font-semibold text-[#5b616e] transition-colors duration-200 hover:bg-[#f5f7fa] hover:text-[#cf202f]"
+            >
+              Log out
+            </button>
           </div>
         </aside>
 
