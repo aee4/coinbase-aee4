@@ -1,61 +1,54 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowDown,
   ArrowRight,
   ArrowUp,
   Bell,
   CandlestickChart,
-  ChartNoAxesCombined,
-  ChevronDown,
   CircleHelp,
   Grid3X3,
   Home,
+  LineChart,
   MoreVertical,
   ReceiptText,
   Search,
   WalletCards,
 } from "lucide-react";
+import api from "../api/api";
+
+const normalizeProfile = (data) => data?.user || data?.data?.user || data?.data || data || null;
+
+const getInitials = (name, email) => {
+  const source = name || email || "M";
+  return source
+    .split(/[ @]/)
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+};
+
+const navItems = [
+  { label: "Home", icon: Home, active: true },
+  { label: "Markets", icon: LineChart },
+  { label: "Cash", icon: WalletCards },
+  { label: "Activity", icon: ReceiptText },
+  { label: "More", icon: MoreVertical },
+];
 
 const cryptoRows = [
-  { name: "Bitcoin", sub: "Most popular", symbol: "B", color: "#f7931a", action: "Buy" },
-  { name: "Ethereum", sub: "Most popular", symbol: "ETH", color: "#627eea", action: "Buy" },
-  { name: "Dogecoin", sub: "Most traded today", symbol: "D", color: "#c2a633", action: "Buy", muted: true },
-];
-
-const derivativeRows = [
   { name: "BTC Perpetual", symbol: "B", color: "#f7931a" },
   { name: "ETH Perpetual", symbol: "ETH", color: "#627eea" },
-  { name: "SOL Perpetual", symbol: "S", color: "#111827", muted: true },
-];
-
-const railItems = [
-  { icon: Home, active: true },
-  { icon: ChartNoAxesCombined },
-  { icon: WalletCards },
-  { icon: ReceiptText },
-  { icon: MoreVertical },
+  { name: "SOL Perpetual", symbol: "SOL", color: "#111827", muted: true },
 ];
 
 function CoinbaseMark() {
   return (
-    <div className="relative h-12 w-12">
-      <div className="absolute inset-0 rounded-full border-[12px] border-[#0052ff]" />
-      <div className="absolute right-0 top-1/2 h-3 w-7 -translate-y-1/2 bg-white" />
-    </div>
-  );
-}
-
-function UnsupportedGraphic() {
-  return (
-    <div className="relative mx-auto h-36 w-36">
-      <div className="absolute left-3 top-0 h-28 w-28 bg-[#566070]" />
-      <div className="absolute left-3 top-0 h-28 w-28 rounded-br-full border-b-[16px] border-l-[16px] border-[#58606d]" />
-      <div className="absolute left-3 top-0 h-28 w-28 rounded-br-full border-r-[16px] border-t-[16px] border-[#5a8bff]" />
-      <div className="absolute left-8 top-3 h-20 w-20 rounded-full border-[8px] border-[#22d3ee]" />
-      <div className="absolute left-12 top-7 h-16 w-16 rounded-full border-[8px] border-[#f4d35e]" />
-      <div className="absolute left-[67px] top-0 h-28 w-16 bg-white" />
-      <div className="absolute left-[67px] top-14 h-14 w-16 border-b-[14px] border-r-[14px] border-[#5a8bff]" />
-      <div className="absolute left-[67px] top-7 h-14 w-14 rounded-full border-[6px] border-[#f4d35e]" />
+    <div className="relative h-10 w-10">
+      <div className="absolute inset-0 rounded-full border-[10px] border-[#0052ff]" />
+      <div className="absolute right-0 top-1/2 h-2.5 w-6 -translate-y-1/2 bg-white" />
     </div>
   );
 }
@@ -64,11 +57,20 @@ function CoinBadge({ color, symbol }) {
   const isEth = symbol === "ETH";
 
   return (
-    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-[24px] font-bold text-white" style={{ backgroundColor: color }}>
+    <span
+      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[19px] font-bold text-white"
+      style={{ backgroundColor: color }}
+    >
       {isEth ? (
-        <span className="relative h-8 w-5">
-          <span className="absolute left-1/2 top-0 h-0 w-0 -translate-x-1/2 border-x-[10px] border-b-[17px] border-x-transparent border-b-white/90" />
-          <span className="absolute bottom-0 left-1/2 h-0 w-0 -translate-x-1/2 border-x-[10px] border-t-[17px] border-x-transparent border-t-white/70" />
+        <span className="relative h-6 w-4">
+          <span className="absolute left-1/2 top-0 h-0 w-0 -translate-x-1/2 border-x-[8px] border-b-[13px] border-x-transparent border-b-white/90" />
+          <span className="absolute bottom-0 left-1/2 h-0 w-0 -translate-x-1/2 border-x-[8px] border-t-[13px] border-x-transparent border-t-white/70" />
+        </span>
+      ) : symbol === "SOL" ? (
+        <span className="flex h-5 w-6 flex-col justify-between">
+          <span className="h-1.5 rounded-full bg-[#14f195]" />
+          <span className="h-1.5 rounded-full bg-[#9945ff]" />
+          <span className="h-1.5 rounded-full bg-[#14f195]" />
         </span>
       ) : (
         symbol
@@ -77,136 +79,119 @@ function CoinBadge({ color, symbol }) {
   );
 }
 
-function TopBar({ onProfileClick }) {
+function UnsupportedIllustration() {
   return (
-    <header className="sticky top-0 z-20 grid h-[104px] grid-cols-[1fr_auto] items-center border-b border-[#e6e8eb] bg-white px-12">
-      <h1 className="text-[40px] font-semibold tracking-[-0.04em] text-[#0a0b0d]">Home</h1>
-      <div className="flex items-center gap-3">
-        <label className="flex h-[62px] w-[545px] max-w-[42vw] items-center gap-5 rounded-full bg-[#f4f5f8] px-7 text-[#5b616e]">
-          <Search size={27} className="text-[#0a0b0d]" strokeWidth={2.4} />
-          <input className="min-w-0 flex-1 bg-transparent text-[26px] font-medium text-[#0a0b0d] outline-none placeholder:text-[#6b7280]" placeholder="Search" type="search" />
-        </label>
-        <button className="flex h-[60px] w-[60px] items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d]" type="button" aria-label="Notifications">
-          <Bell size={25} />
-        </button>
-        <button className="flex h-[60px] w-[60px] items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d]" type="button" aria-label="Help">
-          <CircleHelp size={29} />
-        </button>
-        <button className="flex h-[60px] w-[60px] items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d]" type="button" aria-label="Apps">
-          <Grid3X3 size={29} />
-        </button>
-        <button onClick={onProfileClick} className="flex h-[60px] w-[60px] items-center justify-center rounded-full bg-[#0aa7d6] text-[25px] font-medium text-black" type="button" aria-label="Profile">
-          M
-        </button>
-      </div>
-    </header>
+    <div className="relative mx-auto h-[92px] w-[92px]" aria-hidden="true">
+      <div className="absolute left-3 top-0 h-[76px] w-[76px] bg-[#69707d]" />
+      <div className="absolute left-3 top-0 h-[76px] w-[76px] rounded-br-full border-b-[11px] border-l-[11px] border-[#4f5866]" />
+      <div className="absolute left-3 top-0 h-[76px] w-[76px] rounded-br-full border-r-[11px] border-t-[11px] border-[#5a8bff]" />
+      <div className="absolute left-6 top-2 h-[54px] w-[54px] rounded-full border-[6px] border-[#1fd5e4]" />
+      <div className="absolute left-[34px] top-[20px] h-[42px] w-[42px] rounded-full border-[6px] border-[#f4d35e]" />
+      <div className="absolute left-[50px] top-0 h-[76px] w-[38px] bg-white" />
+      <div className="absolute left-[50px] top-[38px] h-[38px] w-[38px] border-b-[10px] border-r-[10px] border-[#5a8bff]" />
+      <div className="absolute left-[50px] top-[20px] h-[42px] w-[42px] rounded-full border-[5px] border-[#f4d35e]" />
+    </div>
   );
 }
 
 function SideRail() {
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 flex w-[120px] flex-col border-r border-[#e6e8eb] bg-white">
-      <div className="flex h-[120px] items-center justify-center">
+    <aside className="fixed inset-y-0 left-0 z-30 flex w-[92px] flex-col border-r border-[#e6e8eb] bg-white">
+      <div className="flex h-[78px] items-center justify-center">
         <CoinbaseMark />
       </div>
-      <nav className="flex flex-1 flex-col items-center gap-7 pt-2 text-[#0a0b0d]">
-        {railItems.map((item, index) => {
-          const Icon = item.icon;
-          return (
-            <button key={index} className={`flex h-[86px] w-[86px] items-center justify-center rounded-full ${item.active ? "bg-[#eef4ff] text-[#0052ff]" : "text-[#0a0b0d]"}`} type="button">
-              <Icon size={34} strokeWidth={item.active ? 0 : 2.8} fill={item.active ? "currentColor" : "none"} />
-            </button>
-          );
-        })}
-      </nav>
-      <div className="pb-7 text-center text-[#0a0b0d]">
-        <CandlestickChart className="mx-auto" size={34} strokeWidth={2.7} />
-        <p className="mt-5 text-[16px] font-bold">Advanced</p>
-        <button className="mx-auto mt-4 flex h-[34px] w-[62px] items-center rounded-full bg-[#d9dee7] p-1" type="button" aria-label="Advanced mode">
-          <span className="h-[28px] w-[28px] rounded-full bg-white" />
-        </button>
-      </div>
-    </aside>
-  );
-}
-
-function SectionArrow() {
-  return (
-    <button className="absolute right-12 top-8 flex h-[60px] w-[60px] items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d]" type="button" aria-label="Open section">
-      <ArrowRight size={31} />
-    </button>
-  );
-}
-
-function ActionPanel() {
-  return (
-    <aside className="sticky top-[104px] h-[calc(100vh-104px)] border-l border-[#e6e8eb] bg-white">
-      <section className="flex min-h-[632px] flex-col items-center justify-start border-b border-[#e6e8eb] px-16 pt-3 text-center text-[#0a0b0d]">
-        <UnsupportedGraphic />
-        <h2 className="mt-12 text-[42px] font-bold tracking-[-0.04em]">Buys not supported</h2>
-        <p className="mt-5 max-w-[475px] text-[25px] font-medium leading-[1.45]">
-          Coinbase doesn't currently support buys in your country. Subscribe to our blog to be notified when we add support for your country.
-        </p>
-        <button className="mt-12 h-[84px] w-full max-w-[440px] rounded-full bg-[#0052ff] text-[24px] font-bold text-white" type="button">
-          Subscribe now
-        </button>
-      </section>
-      <section className="space-y-8 px-12 py-12 text-[#0a0b0d]">
-        <button className="flex items-center gap-6 text-[26px] font-bold" type="button">
-          <span className="flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#0052ff] text-white">
-            <ArrowUp size={31} />
-          </span>
-          Send crypto
-        </button>
-        <button className="flex items-center gap-6 text-[26px] font-bold" type="button">
-          <span className="flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#0052ff] text-white">
-            <ArrowDown size={31} />
-          </span>
-          Receive crypto
-        </button>
-      </section>
-    </aside>
-  );
-}
-
-function CryptoSection() {
-  return (
-    <section className="relative border-b border-[#e6e8eb] px-12 py-6 text-[#0a0b0d]">
-      <SectionArrow />
-      <h2 className="text-[30px] font-bold">Crypto</h2>
-      <p className="mt-1 text-[25px] font-medium text-[#5b616e]">Trade millions of assets</p>
-      <div className="mt-10">
-        {cryptoRows.map((coin) => (
-          <div key={coin.name} className={`grid h-[90px] grid-cols-[1fr_95px] items-center px-0 ${coin.muted ? "bg-[#f7f8fa]" : ""}`}>
-            <div className="flex items-center gap-6">
-              <CoinBadge color={coin.color} symbol={coin.symbol} />
-              <div>
-                <p className={`text-[24px] font-bold ${coin.muted ? "text-[#343841]" : ""}`}>{coin.name}</p>
-                <p className="text-[22px] font-medium text-[#5b616e]">{coin.sub}</p>
-              </div>
-            </div>
-            <button className="h-[60px] rounded-full bg-[#f4f5f8] text-[24px] font-bold text-[#0a0b0d]" type="button">
-              {coin.action}
-            </button>
-          </div>
+      <nav className="flex flex-1 flex-col items-center gap-5 pt-4">
+        {navItems.map(({ label, icon: Icon, active }) => (
+          <button
+            key={label}
+            type="button"
+            aria-label={label}
+            className={`flex h-[64px] w-[64px] items-center justify-center rounded-full transition-colors ${
+              active ? "bg-[#eef4ff] text-[#0052ff]" : "text-[#0a0b0d] hover:bg-[#f7f8fa]"
+            }`}
+          >
+            <Icon size={25} strokeWidth={active ? 0 : 2.5} fill={active ? "currentColor" : "none"} />
+          </button>
         ))}
+      </nav>
+      <div className="pb-5 text-center text-[#0a0b0d]">
+        <CandlestickChart className="mx-auto" size={25} strokeWidth={2.4} />
+        <p className="mt-3 text-[12px] font-bold">Advanced</p>
+        <button
+          className="mx-auto mt-4 flex h-[26px] w-[48px] items-center rounded-full bg-[#dfe3eb] p-1"
+          type="button"
+          aria-label="Advanced mode"
+        >
+          <span className="h-[20px] w-[20px] rounded-full bg-white shadow-sm" />
+        </button>
       </div>
-      <button className="mt-5 h-[60px] w-full rounded-full bg-[#f4f5f8] text-[24px] font-bold text-[#0a0b0d]" type="button">
-        Explore all crypto
-      </button>
-    </section>
+    </aside>
   );
 }
 
-function CashSection() {
+function Header({ profile, profileOpen, profileError, onProfileClick, onLogout }) {
+  const initials = useMemo(() => getInitials(profile?.name, profile?.email), [profile]);
+
   return (
-    <section className="relative border-b border-[#e6e8eb] px-12 py-10 text-[#0a0b0d]">
-      <SectionArrow />
-      <h2 className="text-[30px] font-bold">Cash</h2>
-      <p className="mt-1 text-[25px] font-medium text-[#5b616e]">
-        Earn <span className="text-[#19c784]">3.35% APY</span>
-      </p>
-      <button className="mt-14 h-[60px] w-full rounded-full bg-[#f4f5f8] text-[24px] font-bold text-[#0a0b0d]" type="button">
+    <header className="sticky top-0 z-20 grid h-[78px] grid-cols-[1fr_auto] items-center border-b border-[#e6e8eb] bg-white px-9">
+      <h1 className="text-[31px] font-semibold tracking-[-0.04em] text-[#0a0b0d]">Home</h1>
+      <div className="flex items-center gap-3">
+        <label className="flex h-[48px] w-[430px] max-w-[37vw] items-center gap-4 rounded-full bg-[#f4f5f8] px-6">
+          <Search size={22} className="text-[#0a0b0d]" strokeWidth={2.5} />
+          <input
+            className="min-w-0 flex-1 bg-transparent text-[20px] font-medium text-[#0a0b0d] outline-none placeholder:text-[#6b7280]"
+            placeholder="Search"
+            type="search"
+          />
+        </label>
+        {[
+          { label: "Notifications", icon: Bell },
+          { label: "Help", icon: CircleHelp },
+          { label: "Apps", icon: Grid3X3 },
+        ].map(({ label, icon: Icon }) => (
+          <button
+            key={label}
+            type="button"
+            aria-label={label}
+            className="flex h-[48px] w-[48px] items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d] transition-colors hover:bg-[#e9edf5]"
+          >
+            <Icon size={21} />
+          </button>
+        ))}
+        <div className="relative">
+          <button
+            onClick={onProfileClick}
+            className="flex h-[48px] w-[48px] items-center justify-center rounded-full bg-[#0aa7d6] text-[19px] font-medium text-black"
+            type="button"
+            aria-label="Profile"
+          >
+            {initials}
+          </button>
+          {profileOpen && (
+            <div className="absolute right-0 top-[60px] z-40 w-[280px] rounded-[12px] border border-[#e6e8eb] bg-white p-4 text-left shadow-[0_14px_40px_rgba(15,23,42,0.14)]">
+              <p className="text-[16px] font-bold text-[#0a0b0d]">{profile?.name || "Coinbase user"}</p>
+              <p className="mt-1 break-all text-[14px] font-medium text-[#5b616e]">
+                {profile?.email || (profileError ? "Unable to load profile" : "Loading profile")}
+              </p>
+              <button
+                onClick={onLogout}
+                type="button"
+                className="mt-4 h-10 w-full rounded-full bg-[#f4f5f8] text-[14px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]"
+              >
+                Log out
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function DepositTail() {
+  return (
+    <section className="border-b border-[#e6e8eb] px-9 py-6">
+      <button type="button" className="h-12 w-full rounded-full bg-[#f4f5f8] text-[18px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
         Deposit cash
       </button>
     </section>
@@ -215,23 +200,33 @@ function CashSection() {
 
 function DerivativesSection() {
   return (
-    <section className="relative border-b border-[#e6e8eb] px-12 py-10 text-[#0a0b0d]">
-      <SectionArrow />
-      <h2 className="text-[30px] font-bold">Derivatives</h2>
-      <p className="mt-1 text-[25px] font-medium text-[#5b616e]">Trade with up to 50x leverage</p>
-      <div className="mt-10">
-        {derivativeRows.map((item) => (
-          <div key={item.name} className={`grid h-[90px] grid-cols-[1fr_125px] items-center ${item.muted ? "bg-[#f7f8fa]" : ""}`}>
-            <div className="flex items-center gap-6">
-              <CoinBadge color={item.color} symbol={item.symbol} />
+    <section className="relative border-b border-[#e6e8eb] px-9 py-7">
+      <button
+        type="button"
+        aria-label="Open derivatives"
+        className="absolute right-9 top-8 flex h-12 w-12 items-center justify-center rounded-full bg-[#f4f5f8] text-[#0a0b0d] hover:bg-[#e9edf5]"
+      >
+        <ArrowRight size={25} />
+      </button>
+      <h2 className="text-[26px] font-bold tracking-[-0.03em] text-[#0a0b0d]">Derivatives</h2>
+      <p className="mt-2 text-[18px] font-medium text-[#5b616e]">Trade with up to 50x leverage</p>
+
+      <div className="mt-12">
+        {cryptoRows.map((coin) => (
+          <div
+            key={coin.name}
+            className={`grid h-[72px] grid-cols-[1fr_76px] items-center gap-4 ${coin.muted ? "bg-[#f7f8fa]" : ""}`}
+          >
+            <div className="flex items-center gap-5">
+              <CoinBadge color={coin.color} symbol={coin.symbol} />
               <div>
-                <p className={`text-[24px] font-bold ${item.muted ? "text-[#343841]" : ""}`}>
-                  {item.name} <span className="rounded-[5px] bg-[#eef0f3] px-2 py-1 text-[20px] text-[#5b616e]">50X</span>
+                <p className={`text-[20px] font-bold leading-tight ${coin.muted ? "text-[#303642]" : "text-[#0a0b0d]"}`}>
+                  {coin.name} <span className="rounded-[5px] bg-[#eef0f3] px-1.5 py-0.5 text-[15px] text-[#5b616e]">50X</span>
                 </p>
-                <p className="text-[22px] font-medium text-[#5b616e]">INTX</p>
+                <p className="mt-1 text-[16px] font-medium leading-tight text-[#5b616e]">INTX</p>
               </div>
             </div>
-            <button className="h-[60px] rounded-full bg-[#f4f5f8] text-[24px] font-bold text-[#0a0b0d]" type="button">
+            <button type="button" className="h-11 rounded-full bg-[#f4f5f8] text-[18px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
               Trade
             </button>
           </div>
@@ -243,42 +238,108 @@ function DerivativesSection() {
 
 function FooterLinks() {
   return (
-    <footer className="px-12 py-12 text-[#5b616e]">
-      <div className="flex flex-wrap items-center gap-7 text-[18px]">
+    <footer className="px-9 py-9 text-[#5b616e]">
+      <div className="flex flex-wrap items-center gap-6 text-[14px]">
         <a className="underline" href="#">Careers</a>
         <a className="underline" href="#">Legal & Privacy</a>
         <a className="underline" href="#">Accessibility Statement</a>
         <span>© 2026 Coinbase</span>
       </div>
-      <button className="mt-9 flex h-[50px] items-center gap-2 rounded-full bg-[#f4f5f8] px-5 text-[20px] font-bold text-[#0a0b0d]" type="button">
-        English <ChevronDown size={24} />
+      <button type="button" className="mt-8 flex h-11 items-center gap-2 rounded-full bg-[#f4f5f8] px-4 text-[16px] font-bold text-[#0a0b0d] hover:bg-[#e9edf5]">
+        English <span className="text-[18px]">⌄</span>
       </button>
     </footer>
   );
 }
 
+function BuyPanel() {
+  return (
+    <aside className="border-l border-[#e6e8eb] bg-white">
+      <section className="border-b border-[#e6e8eb] px-10 py-0">
+        <div className="flex flex-col items-center text-center">
+          <h2 className="text-[31px] font-bold tracking-[-0.04em] text-[#0a0b0d]">Buys not supported</h2>
+          <p className="mt-5 max-w-[390px] text-[18px] font-medium leading-[1.45] text-[#0a0b0d]">
+            Coinbase doesn't currently support buys in your country. Subscribe to our blog to be notified when we add support for your country.
+          </p>
+          <button type="button" className="mt-10 h-[62px] w-full max-w-[360px] rounded-full bg-[#0052ff] text-[18px] font-bold text-white">
+            Subscribe now
+          </button>
+        </div>
+      </section>
+      <section className="space-y-7 px-10 py-10">
+        {[
+          { label: "Send crypto", icon: ArrowUp },
+          { label: "Receive crypto", icon: ArrowDown },
+        ].map(({ label, icon: Icon }) => (
+          <button key={label} type="button" className="flex items-center gap-5 text-[22px] font-bold text-[#0a0b0d]">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0052ff] text-white">
+              <Icon size={25} />
+            </span>
+            {label}
+          </button>
+        ))}
+      </section>
+    </aside>
+  );
+}
+
 function Dashboard() {
+  const [profile, setProfile] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [profileError, setProfileError] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadProfile = async () => {
+      try {
+        const response = await api.get("/profile").catch(() => api.get("/users/profile"));
+        if (isMounted) {
+          setProfile(normalizeProfile(response.data));
+        }
+      } catch {
+        if (isMounted) {
+          setProfileError("Unable to load profile");
+        }
+      }
+    };
+
+    loadProfile();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout");
+    } finally {
+      localStorage.removeItem("token");
+      localStorage.removeItem("jwt");
+      navigate("/signin", { replace: true });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white font-sans text-[#0a0b0d]">
       <SideRail />
-      <div className="ml-[120px] min-h-screen">
-        <TopBar onProfileClick={() => setProfileOpen((open) => !open)} />
-        {profileOpen && (
-          <div className="fixed right-12 top-[88px] z-40 w-64 rounded-[8px] border border-[#e6e8eb] bg-white p-4 text-[#0a0b0d] shadow-2xl">
-            <p className="text-[15px] font-bold">Coinbase user</p>
-            <p className="mt-1 text-[13px] text-[#5b616e]">Profile</p>
-          </div>
-        )}
-        <main className="grid min-h-[calc(100vh-104px)] grid-cols-[minmax(0,1fr)_590px]">
+      <div className="ml-[92px] min-h-screen">
+        <Header
+          profile={profile}
+          profileOpen={profileOpen}
+          profileError={profileError}
+          onProfileClick={() => setProfileOpen((isOpen) => !isOpen)}
+          onLogout={handleLogout}
+        />
+        <main className="grid min-h-[calc(100vh-78px)] grid-cols-[minmax(0,1fr)_460px]">
           <div className="min-w-0">
-            <CryptoSection />
-            <CashSection />
+            <DepositTail />
             <DerivativesSection />
             <FooterLinks />
           </div>
-          <ActionPanel />
+          <BuyPanel />
         </main>
       </div>
     </div>
