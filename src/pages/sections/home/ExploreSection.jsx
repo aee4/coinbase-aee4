@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import MarketCard from "../../../components/crypto/MarketCard.jsx";
 
-const ExploreSection = () => {
+const ExploreSection = ({ coinsByTab, isLoading }) => {
   return (
     <section className="w-full bg-[#f5f5f2] px-6 md:px-10 py-16 md:py-28">
       <div className="mx-auto flex flex-col lg:grid max-w-[1500px] items-center gap-12 lg:gap-16 lg:grid-cols-[0.95fr_0.9fr]">
@@ -25,7 +25,7 @@ const ExploreSection = () => {
         </div>
 
         <div className="flex justify-center lg:justify-end w-full overflow-hidden">
-          <MarketCard />
+          <MarketCard coinsByTab={coinsByTab} isLoading={isLoading} />
         </div>
       </div>
     </section>
