@@ -19,13 +19,13 @@ function FooterSection({ title, links }) {
 
             <div className="flex flex-col gap-1">
                 {links.map((link) => (
-                    <a
+                    <button
                         key={link}
-                        href="#"
-                        className="text-[13px] leading-6 text-slate-600 hover:text-black"
+                        type="button"
+                        className="text-left text-[13px] leading-6 text-slate-600 hover:text-black"
                     >
                         {link}
-                    </a>
+                    </button>
                 ))}
             </div>
         </div>
@@ -49,18 +49,18 @@ function Footer() {
                         
                         {/* Mobile Social Icons - Hidden on Desktop */}
                         <div className="flex lg:hidden items-center gap-6">
-                            <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                            <button type="button" className="opacity-70 hover:opacity-100 transition-opacity">
                                 <img src={xLight} alt="X" className="h-[14px] w-auto" loading="lazy" />
-                            </a>
-                            <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                            </button>
+                            <button type="button" className="opacity-70 hover:opacity-100 transition-opacity">
                                 <img src={linkedinLight} alt="LinkedIn" className="h-[14px] w-auto" loading="lazy" />
-                            </a>
-                            <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                            </button>
+                            <button type="button" className="opacity-70 hover:opacity-100 transition-opacity">
                                 <img src={instagramLight} alt="Instagram" className="h-[14px] w-auto" loading="lazy" />
-                            </a>
-                            <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                            </button>
+                            <button type="button" className="opacity-70 hover:opacity-100 transition-opacity">
                                 <img src={tiktokLight} alt="TikTok" className="h-[14px] w-auto" loading="lazy" />
-                            </a>
+                            </button>
                         </div>
                     </div>
 
@@ -85,18 +85,18 @@ function Footer() {
 
                 {/* Desktop Social Icons - Hidden on Mobile */}
                 <div className="hidden lg:flex mt-8 mb-6 items-center gap-8">
-                    <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                    <button type="button" className="opacity-70 hover:opacity-100 transition-opacity">
                         <img src={xLight} alt="X" className="h-[14px] w-auto" loading="lazy" />
-                    </a>
-                    <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                    </button>
+                    <button type="button" className="opacity-70 hover:opacity-100 transition-opacity">
                         <img src={linkedinLight} alt="LinkedIn" className="h-[14px] w-auto" loading="lazy" />
-                    </a>
-                    <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                    </button>
+                    <button type="button" className="opacity-70 hover:opacity-100 transition-opacity">
                         <img src={instagramLight} alt="Instagram" className="h-[14px] w-auto" loading="lazy" />
-                    </a>
-                    <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                    </button>
+                    <button type="button" className="opacity-70 hover:opacity-100 transition-opacity">
                         <img src={tiktokLight} alt="TikTok" className="h-[14px] w-auto" loading="lazy" />
-                    </a>
+                    </button>
                 </div>
 
                 {/* Bottom Bar: Copyright & Language */}
@@ -106,9 +106,9 @@ function Footer() {
                     <div className="text-sm text-gray-600 flex flex-wrap items-center gap-2">
                         <span>© 2026 Coinbase</span>
                         <span className="hidden sm:inline">•</span>
-                        <a href="#" className="hover:text-black">Privacy</a>
+                        <button type="button" className="hover:text-black">Privacy</button>
                         <span className="hidden sm:inline">•</span>
-                        <a href="#" className="hover:text-black">Terms &amp; Conditions</a>
+                        <button type="button" className="hover:text-black">Terms &amp; Conditions</button>
                     </div>
 
                     {/* Language */}
@@ -128,12 +128,12 @@ function Footer() {
                         <div>
                             <img src={downloadApp} alt="Download the App" className="h-[18px] w-auto mb-4" loading="lazy" />
                             <div className="flex flex-row lg:flex-col gap-4">
-                                <a href="#">
+                                <button type="button">
                                     <img src={googlePlay} alt="Get it on Google Play" className="h-[30px] md:h-[35px] w-auto rounded-[6px]" loading="lazy" />
-                                </a>
-                                <a href="#">
+                                </button>
+                                <button type="button">
                                     <img src={appStore} alt="Download on the App Store" className="h-[30px] md:h-[35px] w-auto rounded-[6px]" loading="lazy" />
-                                </a>
+                                </button>
                             </div>
                         </div>
 

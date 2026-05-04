@@ -1,22 +1,19 @@
-import React from 'react';
-import LearnHero from '../components/learn-sections/LearnHero';
-import LearnFeatured from '../components/learn-sections/LearnFeatured';
-import LearnCategories from '../components/learn-sections/LearnCategories';
-import WhatIsGrid from '../components/learn-sections/WhatIsGrid';
-import LearnContentSection from '../components/learn-sections/LearnContentSection';
-import LearnTipsAndTutorials from '../components/learn-sections/LearnTipsAndTutorials';
-import LearnAdvancedTrading from '../components/learn-sections/LearnAdvancedTrading';
-import LearnFutures from '../components/learn-sections/LearnFutures';
-import LearnWallet from '../components/learn-sections/LearnWallet';
+import LearnHero from './sections/learn/LearnHero';
+import LearnFeatured from './sections/learn/LearnFeatured';
+import LearnCategories from './sections/learn/LearnCategories';
+import WhatIsGrid from './sections/learn/WhatIsGrid';
+import LearnContentSection from './sections/learn/LearnContentSection';
+import LearnTipsAndTutorials from './sections/learn/LearnTipsAndTutorials';
+import LearnAdvancedTrading from './sections/learn/LearnAdvancedTrading';
+import LearnFutures from './sections/learn/LearnFutures';
+import LearnWallet from './sections/learn/LearnWallet';
 
-// Image Imports
 import featuredVideo from "../assets/images/featured-video.png";
 import headWithStar from "../assets/images/head-with-star.png";
 import halfWithHalf from "../assets/images/half-with-half.png";
 import hydraulics from "../assets/images/hydraulics.png";
 import futuresIcon from "../assets/images/futures.png";
 
-// Crypto Basics Images
 import cryptoBasics1 from "../assets/images/crypto-basics-1.png";
 import cryptoBasics2 from "../assets/images/crypto-basics-2.png";
 import cryptoBasics3 from "../assets/images/crypto-basics-3.png";
@@ -66,7 +63,6 @@ function Learn() {
 
         <LearnCategories categories={categories} />
 
-        {/* CRYPTO BASICS */}
         <LearnContentSection 
           title="Crypto basics"
           description="New to crypto? Not for long — start with these guides and explainers"

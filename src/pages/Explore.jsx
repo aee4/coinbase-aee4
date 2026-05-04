@@ -1,16 +1,14 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { statsCards, topMovers, newOnCoinbase, coins } from "../data/exploreData";
 
-// Section Components
-import ExploreHero from "../components/explore-sections/ExploreHero";
-import MarketStats from "../components/explore-sections/MarketStats";
-import CryptoPrices from "../components/explore-sections/CryptoPrices";
-import ExploreCTA from "../components/explore-sections/ExploreCTA";
-import ExploreSidebar from "../components/explore-sections/ExploreSidebar";
-import TopMovers from "../components/explore-sections/TopMovers";
-import NewOnCoinbase from "../components/explore-sections/NewOnCoinbase";
+import ExploreHero from "./sections/explore/ExploreHero";
+import MarketStats from "./sections/explore/MarketStats";
+import CryptoPrices from "./sections/explore/CryptoPrices";
+import ExploreCTA from "./sections/explore/ExploreCTA";
+import ExploreSidebar from "./sections/explore/ExploreSidebar";
+import TopMovers from "./sections/explore/TopMovers";
+import NewOnCoinbase from "./sections/explore/NewOnCoinbase";
 
-// Daily Charts for the CryptoPrices component
 import chart1 from "../assets/images/chart-1.png";
 import chart2 from "../assets/images/chart-2.png";
 import chart3 from "../assets/images/chart-3.png";
@@ -40,7 +38,6 @@ function Explore() {
     <div className="bg-white">
       <section className="w-full">
         <div className="grid min-h-screen grid-cols-1 xl:grid-cols-[minmax(0,1fr)_430px]">
-          {/* LEFT MAIN AREA */}
           <div className="flex min-w-0 flex-col border-r border-[#e5e7eb]">
             <ExploreHero />
             <div className="border-t border-[#e5e7eb]" />
@@ -50,7 +47,6 @@ function Explore() {
             <ExploreCTA />
           </div>
 
-          {/* RIGHT SIDEBAR */}
           <ExploreSidebar>
             <TopMovers 
               topMovers={topMovers} 

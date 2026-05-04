@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/icons/coinbase-logo.svg";
 import { User, Briefcase, Code, Check } from "lucide-react";
@@ -9,7 +9,6 @@ function SignUpType() {
 
   const handleSelectType = (id) => {
     setSelectedType(id);
-    // Add a slight delay for visual feedback if needed, or navigate immediately
     setTimeout(() => {
       navigate("/signup/details", { state: { type: id } });
     }, 300);
@@ -38,14 +37,12 @@ function SignUpType() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-black">
-      {/* Top Logo */}
       <div className="px-8 pt-8">
         <Link to="/">
           <img src={logo} alt="Coinbase" className="h-10 w-auto" />
         </Link>
       </div>
 
-      {/* Main Content */}
       <div className="mx-auto flex max-w-[500px] flex-col items-center px-6 pt-24 pb-20">
         <h1 className="text-center text-[32px] font-semibold leading-tight tracking-tight text-[#0a0b0d]">
           What kind of account are you creating?
@@ -62,7 +59,6 @@ function SignUpType() {
                   : "border-[#eceff1] hover:bg-[#f4f7f9]"
               }`}
             >
-              {/* Icon Container with specific styling from image */}
               <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-[#f4f7f9]">
                 {option.icon}
                 {selectedType === option.id && (
