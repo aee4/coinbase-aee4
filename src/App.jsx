@@ -11,6 +11,7 @@ const Learn = lazy(() => import("./pages/Learn"));
 const Profile = lazy(() => import("./pages/Profile"));
 const AddCrypto = lazy(() => import("./pages/AddCrypto"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Assets = lazy(() => import("./pages/Assets"));
 const SignIn = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const SignUpType = lazy(() => import("./pages/SignUpType"));
@@ -52,6 +53,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/assets"
+            element={
+              <ProtectedRoute>
+                <Assets />
               </ProtectedRoute>
             }
           />

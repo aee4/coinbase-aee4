@@ -25,12 +25,12 @@ const TopMovers = ({ topMovers, scrollRef, onScroll, title = "Top movers" }) => 
 
       <div 
         ref={scrollRef}
-        className="mt-5 md:mt-7 flex overflow-x-auto scroll-smooth gap-4 md:gap-5 pb-2"
+        className="mt-5 grid grid-cols-1 gap-4 pb-2 sm:grid-cols-2 md:mt-7 md:flex md:overflow-x-auto md:scroll-smooth md:gap-5"
       >
         {topMovers.map((mover) => (
           <div
             key={mover.symbol}
-            className="min-w-[150px] md:min-w-[170px] rounded-[20px] md:rounded-[24px] bg-[#f1f3f5] px-4 md:px-5 py-4 md:py-5 shrink-0"
+            className="rounded-[20px] bg-[#f1f3f5] px-4 py-4 md:min-w-[170px] md:shrink-0 md:rounded-[24px] md:px-5 md:py-5"
           >
             <div
               className={`flex h-10 w-10 items-center justify-center rounded-xl ${mover.logoBg}`}

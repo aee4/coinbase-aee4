@@ -72,6 +72,7 @@ function Home() {
     const [gainerCrypto, setGainerCrypto] = useState([]);
     const [newListingCrypto, setNewListingCrypto] = useState([]);
     const [isLoadingCrypto, setIsLoadingCrypto] = useState(true);
+    const [cryptoError, setCryptoError] = useState("");
 
     useEffect(() => {
         let isMounted = true;
@@ -98,10 +99,12 @@ function Home() {
                     setTradableCrypto(tradable);
                     setGainerCrypto(gainers);
                     setNewListingCrypto(newListings);
+                    setCryptoError("");
                     setIsLoadingCrypto(false);
                 }
             } catch {
                 if (isMounted) {
+                    setCryptoError("Unable to load live crypto data right now.");
                     setIsLoadingCrypto(false);
                 }
             }
@@ -123,7 +126,7 @@ function Home() {
     return (
         <div className="bg-white">
             <HeroSection />
-            <ExploreSection coinsByTab={marketCardCoinsByTab} isLoading={isLoadingCrypto} />
+            <ExploreSection coinsByTab={marketCardCoinsByTab} isLoading={isLoadingCrypto} errorMessage={cryptoError} />
             <TradingToolsSection />
             <CoinbaseOneSection />
             <BaseAppSection />

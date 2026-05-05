@@ -38,8 +38,8 @@ const CryptoPrices = ({ coins, assetCharts }) => {
         </button>
       </div>
 
-      <div className="mt-8 md:mt-10 w-full overflow-x-auto pb-4">
-        <div className="min-w-[960px] w-full">
+      <div className="mt-8 md:mt-10 w-full pb-4">
+        <div className="hidden w-full md:block">
           <div className="grid grid-cols-[30px_1.5fr_1fr_0.8fr_0.7fr_0.8fr_0.8fr_80px] items-center border-b border-[#e5e7eb] pb-3 text-[13px] font-medium text-[#6b7280]">
             <div></div>
             <div>Asset</div>
@@ -104,6 +104,69 @@ const CryptoPrices = ({ coins, assetCharts }) => {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="grid gap-3 md:hidden">
+          {coins.length > 0 ? (
+            coins.map((coin, index) => (
+              <div key={coin.name} className="rounded-[8px] border border-[#e5e7eb] bg-white p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-full bg-[#f1f3f5]">
+                      {coin.logo && (
+                        <img
+                          src={coin.logo}
+                          alt={coin.name}
+                          className="h-6 w-6 object-contain"
+                        />
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="truncate text-[14px] font-semibold text-black">
+                        {coin.name}
+                      </div>
+                      <div className="truncate text-[12px] text-[#6b7280]">
+                        {coin.symbol}
+                      </div>
+                    </div>
+                  </div>
+                  <button className="min-h-11 shrink-0 rounded-full bg-[#1652f0] px-4 py-2 text-[13px] font-semibold text-white">
+                    Trade
+                  </button>
+                </div>
+
+                <div className="mt-4 grid grid-cols-2 gap-3 text-[13px]">
+                  <div>
+                    <p className="text-[#6b7280]">Market price</p>
+                    <p className="mt-1 font-semibold text-black">{coin.price}</p>
+                  </div>
+                  <div>
+                    <p className="text-[#6b7280]">Change</p>
+                    <p className={`mt-1 font-semibold ${coin.changeColor}`}>{coin.change}</p>
+                  </div>
+                  <div>
+                    <p className="text-[#6b7280]">Mkt cap</p>
+                    <p className="mt-1 font-semibold text-black">{coin.cap}</p>
+                  </div>
+                  <div>
+                    <p className="text-[#6b7280]">Volume</p>
+                    <p className="mt-1 font-semibold text-black">{coin.volume}</p>
+                  </div>
+                </div>
+
+                <img
+                  src={assetCharts[index % assetCharts.length]}
+                  alt="Price chart"
+                  loading="lazy"
+                  className="mt-3 h-10 w-full object-contain"
+                />
+              </div>
+            ))
+          ) : (
+            <p className="rounded-[8px] border border-[#e5e7eb] p-4 text-center text-[14px] text-[#5b616e]">
+              No crypto market price data available
+            </p>
+          )}
         </div>
       </div>
 

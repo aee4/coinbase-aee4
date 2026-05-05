@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import api from "../api/api";
+import { getProfile } from "../api/profile";
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -12,10 +12,8 @@ function Profile() {
 
     const loadProfile = async () => {
       try {
-        const response = await api.get("/users/profile");
-
         if (isMounted) {
-          setUser(response.data);
+          setUser(await getProfile());
         }
       } catch {
         if (isMounted) {

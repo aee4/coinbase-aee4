@@ -21,6 +21,8 @@ import {
   BarChart3,
 } from "lucide-react";
 import api from "../api/api";
+import { getProfile } from "../api/profile";
+import { clearAuthTokens } from "../utils/auth";
 import bitcoinLogo from "../assets/images/bitcoin.png";
 import ethereumLogo from "../assets/images/ethereum.png";
 import solanaLogo from "../assets/images/solana.png";
@@ -127,8 +129,6 @@ const allocation = [
   { label: "Other assets", value: "11.2%", color: "#cbd5e1" },
 ];
 
-const normalizeProfile = (data) => data?.user || data?.data?.user || data?.data || data || null;
-
 const getInitials = (name, email) => {
   const source = name || email || "AK";
   return source
@@ -208,6 +208,31 @@ function Sidebar({ onLogout }) {
   );
 }
 
+function BottomNav() {
+  return (
+    <nav className="fixed inset-x-0 bottom-0 z-40 flex h-[64px] border-t border-[#e6e8eb] bg-white px-2 lg:hidden">
+      <div className="grid w-full grid-cols-5">
+        {navItems.slice(0, 5).map((item) => {
+          const NavIcon = item.icon;
+
+          return (
+            <Link
+              key={item.label}
+              to={item.to}
+              className={`flex min-h-11 flex-col items-center justify-center gap-1 text-[10px] font-bold ${
+                item.active ? "text-[#0052ff]" : "text-[#5b616e]"
+              }`}
+            >
+              <NavIcon size={20} strokeWidth={item.active ? 2.8 : 2.2} />
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
+
 function BalanceChart() {
   const path =
     "M2 86 L18 86 L30 76 L42 80 L54 64 L66 58 L78 42 L90 52 L102 48 L114 56 L126 45 L138 43 L150 37 L162 56 L174 68 L186 62 L198 72 L210 59 L222 70 L234 63 L246 78 L258 84 L270 74 L282 89 L294 79 L306 73 L318 78 L330 62 L342 54 L354 50 L366 44 L378 56 L390 47 L402 61 L414 58 L426 41 L438 45 L450 35 L462 32 L474 21 L486 28 L498 25 L510 36 L522 27 L534 35 L546 26 L558 18 L570 25 L582 41 L594 32 L606 28 L618 43 L630 38 L642 22 L654 31";
@@ -222,7 +247,7 @@ function BalanceChart() {
 
 function DonutChart() {
   return (
-    <div className="flex items-center gap-9">
+    <div className="flex items-center gap-9 max-[480px]:flex-col max-[480px]:items-start">
       <div
         className="h-[166px] w-[166px] rounded-full"
         style={{
@@ -232,7 +257,7 @@ function DonutChart() {
       >
         <div className="m-auto mt-[42px] h-[82px] w-[82px] rounded-full bg-white" />
       </div>
-      <div className="min-w-[170px] space-y-4">
+      <div className="min-w-[170px] space-y-4 max-[480px]:w-full">
         {allocation.map((item) => (
           <div key={item.label} className="grid grid-cols-[14px_1fr_auto] items-center gap-3 text-[14px]">
             <span className="h-[9px] w-[9px] rounded-full" style={{ backgroundColor: item.color }} />
@@ -270,15 +295,12 @@ function Assets() {
 
     const loadProfile = async () => {
       try {
-        const profileResponse = await api.get("/profile").catch(() => api.get("/users/profile"));
-
         if (isMounted) {
-          setProfile(normalizeProfile(profileResponse.data));
+          setProfile(await getProfile());
         }
       } catch {
         if (isMounted) {
-          localStorage.removeItem("token");
-          localStorage.removeItem("jwt");
+          clearAuthTokens();
           setShouldRedirect(true);
         }
       }
@@ -296,11 +318,9 @@ function Assets() {
     setProfileError("");
 
     try {
-      const profileResponse = await api.get("/profile").catch(() => api.get("/users/profile"));
-      setProfile(normalizeProfile(profileResponse.data));
+      setProfile(await getProfile());
     } catch {
-      localStorage.removeItem("token");
-      localStorage.removeItem("jwt");
+      clearAuthTokens();
       setProfileError("Unable to load profile.");
       setShouldRedirect(true);
     } finally {
@@ -312,7 +332,7 @@ function Assets() {
     setIsProfileOpen((isOpen) => {
       const nextOpenState = !isOpen;
 
-      if (nextOpenState) {
+      if (nextOpenState && !profile) {
         loadProfileDetails();
       }
 
@@ -324,8 +344,7 @@ function Assets() {
     try {
       await api.post("/auth/logout");
     } finally {
-      localStorage.removeItem("token");
-      localStorage.removeItem("jwt");
+      clearAuthTokens();
       navigate("/signin", { replace: true });
     }
   };
@@ -337,13 +356,13 @@ function Assets() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-[#0a0b0d]">
+    <div className="min-h-screen bg-white pb-[64px] text-[#0a0b0d] lg:pb-0">
       <div className="grid min-h-screen lg:grid-cols-[245px_minmax(0,1fr)]">
         <Sidebar onLogout={handleLogout} />
 
         <main className="min-w-0 bg-[#fbfcfe]">
-          <header className="flex h-[70px] items-center gap-4 border-b border-[#e6e8eb] bg-white px-5 md:px-7">
-            <h1 className="mr-auto text-[21px] font-semibold tracking-[-0.03em]">My assets</h1>
+          <header className="flex min-h-[70px] items-center gap-4 border-b border-[#e6e8eb] bg-white px-5 md:px-7 max-[480px]:flex-wrap max-[480px]:gap-3 max-[480px]:py-3">
+            <h1 className="mr-auto text-[21px] font-semibold tracking-[-0.03em] max-[480px]:w-full max-[480px]:text-[18px]">My assets</h1>
             <div className="hidden h-10 w-full max-w-[300px] items-center gap-3 rounded-full bg-[#f4f5f8] px-4 text-[#5b616e] md:flex">
               <Search size={18} />
               <input className="w-full bg-transparent text-[13px] outline-none placeholder:text-[#6b7280]" placeholder="Search for an asset" type="search" />
@@ -383,14 +402,14 @@ function Assets() {
 
           <div className="px-5 py-5 md:px-7">
             <div className="grid gap-5 xl:grid-cols-[minmax(0,1.65fr)_minmax(360px,1fr)]">
-              <section className="rounded-[12px] border border-[#e1e6ef] bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.03)]">
+              <section className="w-full rounded-[12px] border border-[#e1e6ef] bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.03)] max-[480px]:p-4">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="text-[17px] font-semibold">My balance</p>
                       <Eye size={17} className="text-[#111827]" />
                     </div>
-                    <p className="mt-4 text-[39px] font-medium tracking-[-0.05em]">$12,345.67</p>
+                    <p className="mt-4 text-[39px] font-medium tracking-[-0.05em] max-[480px]:text-[22px]">$12,345.67</p>
                     <div className="mt-3 flex items-center gap-2 text-[14px]">
                       <span className="font-semibold text-[#098551]">↗ $1,234.56 (11.11%)</span>
                       <span className="text-[#5b616e]">all time</span>
@@ -409,9 +428,9 @@ function Assets() {
                 </div>
               </section>
 
-              <section className="overflow-hidden rounded-[12px] border border-[#e1e6ef] bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.03)]">
-                <h2 className="text-[18px] font-semibold">Portfolio allocation</h2>
-                <div className="mt-6 overflow-x-auto">
+              <section className="w-full overflow-hidden rounded-[12px] border border-[#e1e6ef] bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.03)] max-[480px]:p-4">
+                <h2 className="text-[18px] font-semibold max-[480px]:text-[15px]">Portfolio allocation</h2>
+                <div className="mt-6">
                   <DonutChart />
                 </div>
               </section>
@@ -419,7 +438,7 @@ function Assets() {
 
             <section className="mt-5 overflow-hidden rounded-[12px] border border-[#e1e6ef] bg-white shadow-[0_8px_30px_rgba(15,23,42,0.03)]">
               <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-5">
-                <h2 className="text-[18px] font-semibold">My assets</h2>
+                <h2 className="text-[18px] font-semibold max-[480px]:text-[15px]">My assets</h2>
                 <div className="flex flex-wrap items-center gap-4 text-[13px] font-medium">
                   <label className="flex items-center gap-2 text-[#1f2937]">
                     <input type="checkbox" className="h-4 w-4 accent-[#0052ff]" />
@@ -440,7 +459,7 @@ function Assets() {
                 </div>
               </div>
 
-              <div className="overflow-x-auto">
+              <div className="hidden md:block">
                 <table className="w-full min-w-[920px] border-collapse text-left">
                   <thead>
                     <tr className="border-b border-[#eef0f3] text-[12px] font-semibold text-[#374151]">
@@ -489,6 +508,56 @@ function Assets() {
                 </table>
               </div>
 
+              <div className="grid gap-3 px-4 pb-4 md:hidden">
+                {assets.length > 0 ? (
+                  assets.map((asset) => (
+                    <div key={asset.symbol} className="rounded-[8px] border border-[#eef0f3] bg-white p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex min-w-0 items-center gap-3">
+                          <CoinIcon asset={asset} />
+                          <div className="min-w-0">
+                            <p className="truncate text-[14px] font-semibold">{asset.name}</p>
+                            <p className="mt-0.5 truncate text-[12px] text-[#5b616e]">{asset.symbol}</p>
+                          </div>
+                        </div>
+                        <p className="shrink-0 text-right text-[14px] font-semibold">{asset.value}</p>
+                      </div>
+
+                      <div className="mt-4 grid grid-cols-2 gap-3 text-[13px]">
+                        <div>
+                          <p className="text-[#5b616e]">Balance</p>
+                          <p className="mt-1 font-semibold text-[#374151]">{asset.balance}</p>
+                        </div>
+                        <div>
+                          <p className="text-[#5b616e]">Price</p>
+                          <p className="mt-1 font-semibold">{asset.price}</p>
+                        </div>
+                        <div>
+                          <p className="text-[#5b616e]">Change (24h)</p>
+                          <p className={`mt-1 font-semibold ${asset.change >= 0 ? "text-[#098551]" : "text-[#cf202f]"}`}>
+                            {asset.change >= 0 ? "up" : "down"} {Math.abs(asset.change).toFixed(2)}%
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[#5b616e]">Allocation</p>
+                          <p className="mt-1 font-semibold">{asset.allocation}</p>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 grid grid-cols-3 gap-2 text-[13px] font-bold text-[#0052ff]">
+                        <button type="button" className="min-h-11 rounded-full bg-[#f4f5f8]">Buy</button>
+                        <button type="button" className="min-h-11 rounded-full bg-[#f4f5f8]">Sell</button>
+                        <button type="button" className="min-h-11 rounded-full bg-[#f4f5f8]">Convert</button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="rounded-[8px] border border-[#eef0f3] p-4 text-center text-[14px] text-[#5b616e]">
+                    No assets available
+                  </p>
+                )}
+              </div>
+
               <div className="border-t border-[#eef0f3] px-6 py-4 text-center">
                 <button type="button" className="inline-flex items-center gap-2 text-[14px] font-semibold">
                   View more assets
@@ -499,6 +568,7 @@ function Assets() {
           </div>
         </main>
       </div>
+      <BottomNav />
     </div>
   );
 }
