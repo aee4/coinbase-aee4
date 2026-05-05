@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
-import { getToken } from "../../utils/auth";
+import { hasAuthSession } from "../../utils/auth";
 
 function ProtectedRoute({ children }) {
-  if (!getToken()) {
+  if (!hasAuthSession()) {
     return <Navigate to="/signin" replace />;
   }
 

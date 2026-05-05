@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/api";
+import { setAuthSession } from "../utils/auth";
 import AuthLayout from "../components/layout/AuthLayout";
 import AuthInput from "../components/common/AuthInput";
 import AuthSocialButtons from "../components/common/AuthSocialButtons";
@@ -48,6 +49,7 @@ function SignIn() {
         localStorage.setItem("token", token);
       }
 
+      setAuthSession();
       navigate("/dashboard");
     } catch (requestError) {
       setError(getErrorMessage(requestError));
