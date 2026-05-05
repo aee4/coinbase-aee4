@@ -9,7 +9,6 @@ import ExploreCTA from "./sections/explore/ExploreCTA";
 import ExploreSidebar from "./sections/explore/ExploreSidebar";
 import TopMovers from "./sections/explore/TopMovers";
 import NewOnCoinbase from "./sections/explore/NewOnCoinbase";
-import MarketCard from "../components/crypto/MarketCard";
 
 import chart1 from "../assets/images/chart-1.png";
 import chart2 from "../assets/images/chart-2.png";
@@ -101,24 +100,20 @@ const normalizeCrypto = (coin) => ({
 function Explore() {
   const topMoversRef = useRef(null);
   const newOnCoinbaseRef = useRef(null);
-  const [tradableCrypto, setTradableCrypto] = useState([]);
   const [gainerCrypto, setGainerCrypto] = useState([]);
   const [newListingCrypto, setNewListingCrypto] = useState([]);
   const [isLoadingCrypto, setIsLoadingCrypto] = useState(true);
-  const [cryptoError, setCryptoError] = useState("");
 
   useEffect(() => {
     let isMounted = true;
 
     const loadCryptoData = async () => {
       try {
-        const [cryptoResponse, gainersResponse, newResponse] = await Promise.all([
-          api.get("/crypto"),
+        const [gainersResponse, newResponse] = await Promise.all([
           api.get("/crypto/gainers"),
           api.get("/crypto/new"),
         ]);
 
-        const tradable = getCryptoArray(cryptoResponse.data).map(normalizeCrypto);
         const gainers = getCryptoArray(gainersResponse.data)
           .map(normalizeCrypto)
           .sort((firstCoin, secondCoin) => secondCoin.change24h - firstCoin.change24h);
@@ -127,15 +122,12 @@ function Explore() {
           .sort((firstCoin, secondCoin) => getDateValue(secondCoin) - getDateValue(firstCoin));
 
         if (isMounted) {
-          setTradableCrypto(tradable);
           setGainerCrypto(gainers);
           setNewListingCrypto(newListings);
-          setCryptoError("");
           setIsLoadingCrypto(false);
         }
       } catch {
         if (isMounted) {
-          setCryptoError("Unable to load live crypto data right now.");
           setIsLoadingCrypto(false);
         }
       }
@@ -147,12 +139,6 @@ function Explore() {
       isMounted = false;
     };
   }, []);
-
-  const marketCardCoinsByTab = {
-    tradable: tradableCrypto,
-    gainers: gainerCrypto,
-    new: newListingCrypto,
-  };
 
   const scroll = (ref, direction) => {
     if (ref.current) {
@@ -182,18 +168,6 @@ function Explore() {
             <div className="border-t border-[#e5e7eb]" />
             <MarketStats statsCards={statsCards} />
             <div className="border-t border-[#e5e7eb]" />
-            <div className="px-6 md:px-9 pt-12 md:pt-16">
-              <MarketCard
-                coinsByTab={marketCardCoinsByTab}
-                initialTab="tradable"
-                isLoading={isLoadingCrypto}
-              />
-              {cryptoError && (
-                <p className="mt-4 text-[14px] font-medium text-[#ea3943]">
-                  {cryptoError}
-                </p>
-              )}
-            </div>
             <CryptoPrices coins={coins} assetCharts={assetCharts} />
             <ExploreCTA />
           </div>

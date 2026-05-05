@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import api from "../api/api";
 import { setAuthSession } from "../utils/auth";
 import AuthLayout from "../components/layout/AuthLayout";
@@ -15,6 +16,7 @@ function SignIn() {
   });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -77,11 +79,22 @@ function SignIn() {
         <AuthInput 
           label="Password"
           name="password"
-          type="password"
+          type={isPasswordVisible ? "text" : "password"}
           value={formData.password}
           onChange={handleChange}
           placeholder="Your password"
           required
+          trailingElement={
+            <button
+              type="button"
+              aria-label={isPasswordVisible ? "Hide password" : "Show password"}
+              title={isPasswordVisible ? "Hide password" : "Show password"}
+              className="flex h-10 w-10 items-center justify-center rounded-full text-[#5b616e] hover:bg-[#f1f3f5] hover:text-black"
+              onClick={() => setIsPasswordVisible((isVisible) => !isVisible)}
+            >
+              {isPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          }
         />
 
         {error && (

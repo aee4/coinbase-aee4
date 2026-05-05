@@ -1,20 +1,23 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import api from "../api/api";
+import { setAuthSession } from "../utils/auth";
 import AuthLayout from "../components/layout/AuthLayout";
 import AuthInput from "../components/common/AuthInput";
 import AuthSocialButtons from "../components/common/AuthSocialButtons";
 import Button from "../components/common/Button";
 
 function SignUp() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -35,17 +38,26 @@ function SignUp() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
-    setSuccessMessage("");
     setIsSubmitting(true);
 
     try {
       await api.post("/auth/register", formData);
-      setSuccessMessage("Account created successfully. You can now sign in.");
-      setFormData({
-        name: "",
-        email: "",
-        password: "",
+      const response = await api.post("/auth/login", {
+        email: formData.email,
+        password: formData.password,
       });
+      const token =
+        response.data?.token ||
+        response.data?.jwt ||
+        response.data?.accessToken ||
+        response.data?.data?.token;
+
+      if (token) {
+        localStorage.setItem("token", token);
+      }
+
+      setAuthSession();
+      navigate("/dashboard");
     } catch (requestError) {
       setError(getErrorMessage(requestError));
     } finally {
@@ -85,18 +97,23 @@ function SignUp() {
         <AuthInput 
           label="Password"
           name="password"
-          type="password"
+          type={isPasswordVisible ? "text" : "password"}
           value={formData.password}
           onChange={handleChange}
           placeholder="Create a password"
           required
+          trailingElement={
+            <button
+              type="button"
+              aria-label={isPasswordVisible ? "Hide password" : "Show password"}
+              title={isPasswordVisible ? "Hide password" : "Show password"}
+              className="flex h-10 w-10 items-center justify-center rounded-full text-[#5b616e] hover:bg-[#f1f3f5] hover:text-black"
+              onClick={() => setIsPasswordVisible((isVisible) => !isVisible)}
+            >
+              {isPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          }
         />
-
-        {successMessage && (
-          <p className="mt-4 text-[14px] font-medium text-green-700">
-            {successMessage}
-          </p>
-        )}
 
         {error && (
           <p className="mt-4 text-[14px] font-medium text-red-600">
