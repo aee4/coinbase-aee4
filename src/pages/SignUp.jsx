@@ -85,6 +85,7 @@ function SignUp() {
           value={formData.password}
           onChange={handleChange}
           placeholder="Create a password"
+          minLength={6}
           required
           trailingElement={
             <button
@@ -98,6 +99,9 @@ function SignUp() {
             </button>
           }
         />
+        <p className="mt-2 text-[13px] font-medium text-[#5b616e]">
+          Password must be at least 6 characters.
+        </p>
 
         {error && (
           <p className="mt-4 text-[14px] font-medium text-red-600">
