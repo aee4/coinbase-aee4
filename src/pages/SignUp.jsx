@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import api from "../api/api";
-import { setAuthSession } from "../utils/auth";
 import AuthLayout from "../components/layout/AuthLayout";
 import AuthInput from "../components/common/AuthInput";
 import AuthSocialButtons from "../components/common/AuthSocialButtons";
@@ -42,22 +41,7 @@ function SignUp() {
 
     try {
       await api.post("/auth/register", formData);
-      const response = await api.post("/auth/login", {
-        email: formData.email,
-        password: formData.password,
-      });
-      const token =
-        response.data?.token ||
-        response.data?.jwt ||
-        response.data?.accessToken ||
-        response.data?.data?.token;
-
-      if (token) {
-        localStorage.setItem("token", token);
-      }
-
-      setAuthSession();
-      navigate("/dashboard");
+      navigate("/signin");
     } catch (requestError) {
       setError(getErrorMessage(requestError));
     } finally {
