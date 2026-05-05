@@ -28,9 +28,6 @@ import {
     Lock,
     LineChart,
     Building,
-    FileText,
-    Share2,
-    HelpCircle,
     Shield,
     ChevronRight,
     Info,
@@ -40,7 +37,10 @@ import {
     X
 } from "lucide-react";
 
-// Custom Coinbase Icon component for the menu
+const SCROLL_THRESHOLD = 20;
+const getMenuLabel = (key) => key.charAt(0).toUpperCase() + key.slice(1);
+const focusRingClass = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] focus-visible:ring-offset-2";
+
 const CoinbaseIcon = () => (
     <img src={coinbaseIcon} alt="" className="w-5 h-5 brightness-0" />
 );
@@ -162,6 +162,8 @@ const menuData = {
     },
 };
 
+const desktopNavItems = Object.keys(menuData);
+
 function MegaMenu({ menu }) {
     if (!menu) return null;
 
@@ -185,7 +187,7 @@ function MegaMenu({ menu }) {
                                 <Link
                                     key={idx}
                                     to={item.path || "#"}
-                                    className="flex items-start gap-4 rounded-xl p-3 transition-colors hover:bg-gray-50 group"
+                                    className={`flex items-start gap-4 rounded-xl p-3 transition-colors hover:bg-gray-50 group ${focusRingClass}`}
                                 >
                                     <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-gray-100 text-gray-900 transition-colors group-hover:bg-gray-200">
                                         {Icon && <Icon size={20} />}
@@ -228,7 +230,7 @@ function MegaMenu({ menu }) {
                         </p>
                         <Link
                             to="#"
-                            className="mt-4 w-fit text-xl font-bold text-black border-b-2 border-black hover:border-gray-500 hover:text-gray-700 transition-all font-inter"
+                            className={`mt-4 w-fit text-xl font-bold text-black border-b-2 border-black hover:border-gray-500 hover:text-gray-700 transition-all font-inter ${focusRingClass}`}
                         >
                             {menu.promo.cta}
                         </Link>
@@ -245,20 +247,36 @@ function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
+        let animationFrameId = null;
+
         const handleScroll = () => {
-            if (window.scrollY > 20) {
-                setIsScrolled(true);
-            } else {
-                setIsScrolled(false);
+            if (animationFrameId) {
+                return;
             }
+
+            animationFrameId = window.requestAnimationFrame(() => {
+                const nextIsScrolled = window.scrollY > SCROLL_THRESHOLD;
+                setIsScrolled((currentIsScrolled) =>
+                    currentIsScrolled === nextIsScrolled ? currentIsScrolled : nextIsScrolled
+                );
+                animationFrameId = null;
+            });
         };
 
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
+        handleScroll();
+        window.addEventListener("scroll", handleScroll, { passive: true });
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            if (animationFrameId) {
+                window.cancelAnimationFrame(animationFrameId);
+            }
+        };
     }, []);
 
     return (
-        <nav 
+        <nav
+            aria-label="Primary"
             className={`w-full border-b border-gray-100 bg-white sticky top-0 z-50 transition-all duration-300 ${
                 isScrolled ? "shadow-md bg-white/95 backdrop-blur-md h-16" : "h-20"
             }`}
@@ -269,45 +287,33 @@ function Navbar() {
 
                 {/* LEFT SIDE */}
                 <div className="flex items-center gap-4 md:gap-12">
-
-                    {/* Hamburger Menu (Mobile Only) */}
-                    <button 
-                        className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 p-2 rounded-full hover:bg-gray-100"
-                        onClick={() => setIsMobileMenuOpen((open) => !open)}
-                        aria-label="Toggle navigation menu"
-                        aria-expanded={isMobileMenuOpen}
-                    >
-                        <span className="w-5 h-[2px] bg-black block rounded-full"></span>
-                        <span className="w-5 h-[2px] bg-black block rounded-full"></span>
-                        <span className="w-5 h-[2px] bg-black block rounded-full"></span>
-                    </button>
-
                     {/* Logo */}
-                    <Link to="/">
-                        <img src={logo} alt="Coinbase" className="h-8 md:h-10" />
+                    <Link to="/" className={`rounded-full ${focusRingClass}`}>
+                        <img src={coinbaseIcon} alt="Coinbase" className="h-10 w-10 md:hidden" />
+                        <img src={logo} alt="Coinbase" className="hidden h-8 md:block md:h-10" />
                     </Link>
 
                     {/* Navigation Links - Hidden on Mobile */}
-                    <div className="hidden lg:flex items-center gap-2 xl:gap-4 text-base font-bold text-gray-800">
+                    <div className="hidden lg:flex items-center gap-2 xl:gap-4 text-base font-bold text-gray-800" aria-label="Main navigation">
 
                         <Link 
                             to="/explore" 
-                            className="px-3 xl:px-4 py-2 rounded-full hover:bg-gray-50 transition-colors"
+                            className={`px-3 xl:px-4 py-2 rounded-full hover:bg-gray-50 transition-colors ${focusRingClass}`}
                             onMouseEnter={() => setActiveMenu(null)}
                         >
                             Cryptocurrencies
                         </Link>
 
-                        {Object.keys(menuData).map((key) => (
+                        {desktopNavItems.map((key) => (
                             <Link 
                                 key={key}
                                 to="#" 
-                                className={`px-3 xl:px-4 py-2 rounded-full transition-colors ${
+                                className={`px-3 xl:px-4 py-2 rounded-full transition-colors ${focusRingClass} ${
                                     activeMenu === key ? "bg-gray-100 text-black" : "hover:bg-gray-50"
                                 }`}
                                 onMouseEnter={() => setActiveMenu(key)}
                             >
-                                {key.charAt(0).toUpperCase() + key.slice(1)}
+                                {getMenuLabel(key)}
                             </Link>
                         ))}
 
@@ -315,22 +321,30 @@ function Navbar() {
                 </div>
 
                 {/* RIGHT SIDE */}
-                <div className="flex items-center gap-2 md:gap-4">
+                <div className="flex flex-1 items-center justify-end gap-3 md:flex-none md:gap-4">
 
-                    {/* Search - Hidden on very small screens */}
-                    <button className="hidden sm:flex w-10 h-10 md:w-11 md:h-11 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
-                        <Search size={20} />
+                    {/* Search */}
+                    <button
+                        type="button"
+                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#f1f3f5] hover:bg-gray-200 md:h-11 md:w-11 ${focusRingClass}`}
+                        aria-label="Search"
+                    >
+                        <Search size={26} className="md:h-5 md:w-5" strokeWidth={2.4} />
                     </button>
 
                     {/* Globe - Hidden on Mobile */}
-                    <button className="hidden md:flex w-11 h-11 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
+                    <button
+                        type="button"
+                        className={`hidden md:flex w-11 h-11 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 ${focusRingClass}`}
+                        aria-label="Select language or region"
+                    >
                         <Globe size={20} />
                     </button>
 
                     {/* Sign in - Hidden on very small screens */}
                     <Link
                         to="/signin"
-                        className="hidden sm:block px-4 md:px-5 py-2 md:py-2.5 rounded-full bg-gray-100 text-sm md:text-base font-bold hover:bg-gray-200"
+                        className={`hidden sm:block px-4 md:px-5 py-2 md:py-2.5 rounded-full bg-gray-100 text-sm md:text-base font-bold hover:bg-gray-200 ${focusRingClass}`}
                     >
                         Sign in
                     </Link>
@@ -338,10 +352,24 @@ function Navbar() {
                     {/* Sign up */}
                     <Link
                         to="/signup"
-                        className="px-4 md:px-6 py-2 md:py-2.5 rounded-full bg-[#0052ff] text-white text-sm md:text-base font-bold hover:bg-[#0047df] transition-all active:scale-95"
+                        className={`flex h-12 min-w-[132px] items-center justify-center rounded-full bg-[#0052ff] px-5 text-[18px] font-bold text-white transition-all hover:bg-[#0047df] active:scale-95 md:h-auto md:min-w-0 md:px-6 md:py-2.5 md:text-base ${focusRingClass}`}
                     >
-                        Sign up
+                        <span className="md:hidden">Get started</span>
+                        <span className="hidden md:inline">Sign up</span>
                     </Link>
+
+                    {/* Hamburger Menu (Mobile Only) */}
+                    <button 
+                        type="button"
+                        className={`flex h-12 w-12 shrink-0 flex-col items-center justify-center gap-1.5 rounded-full bg-[#f1f3f5] p-2 hover:bg-gray-200 md:hidden ${focusRingClass}`}
+                        onClick={() => setIsMobileMenuOpen((open) => !open)}
+                        aria-label="Toggle navigation menu"
+                        aria-expanded={isMobileMenuOpen}
+                    >
+                        <span className="block h-[2.5px] w-6 rounded-full bg-black"></span>
+                        <span className="block h-[2.5px] w-6 rounded-full bg-black"></span>
+                        <span className="block h-[2.5px] w-6 rounded-full bg-black"></span>
+                    </button>
 
                 </div>
             </div>
@@ -358,19 +386,24 @@ function Navbar() {
                     />
 
                     {/* Panel */}
-                    <div className="fixed inset-y-0 left-0 z-50 w-[80%] max-w-xs bg-white shadow-xl flex flex-col">
+                    <div
+                        className="fixed inset-y-0 left-0 z-50 w-[80%] max-w-xs bg-white shadow-xl flex flex-col"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Navigation menu"
+                    >
                         <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
                             <Link
                                 to="/"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="flex items-center"
+                                className={`flex items-center rounded-full ${focusRingClass}`}
                             >
                                 <img src={logo} alt="Coinbase" className="h-8 w-auto" />
                             </Link>
                             <button
                                 type="button"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100"
+                                className={`flex h-11 w-11 items-center justify-center rounded-full hover:bg-gray-100 ${focusRingClass}`}
                                 aria-label="Close navigation menu"
                             >
                                 <X size={18} />
@@ -381,26 +414,26 @@ function Navbar() {
                             <Link
                                 to="/explore"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="block rounded-full px-4 py-3 text-[15px] font-semibold text-black hover:bg-gray-100"
+                                className={`block rounded-full px-4 py-3 text-[15px] font-semibold text-black hover:bg-gray-100 ${focusRingClass}`}
                             >
                                 Cryptocurrencies
                             </Link>
                             <Link
                                 to="/learn"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="block rounded-full px-4 py-3 text-[15px] font-semibold text-black hover:bg-gray-100"
+                                className={`block rounded-full px-4 py-3 text-[15px] font-semibold text-black hover:bg-gray-100 ${focusRingClass}`}
                             >
                                 Learn
                             </Link>
 
                             <div className="mt-4 border-t border-gray-100 pt-4 space-y-1">
-                                {Object.keys(menuData).map((key) => (
+                                {desktopNavItems.map((key) => (
                                     <button
                                         key={key}
                                         type="button"
-                                        className="flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-[15px] font-semibold text-black hover:bg-gray-100"
+                                        className={`flex min-h-11 w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-[15px] font-semibold text-black hover:bg-gray-100 ${focusRingClass}`}
                                     >
-                                        <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
+                                        <span>{getMenuLabel(key)}</span>
                                         <ChevronRight size={16} className="text-gray-400" />
                                     </button>
                                 ))}
@@ -411,14 +444,14 @@ function Navbar() {
                             <Link
                                 to="/signin"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="block w-full rounded-full bg-gray-100 px-4 py-3 text-center text-[15px] font-semibold text-black hover:bg-gray-200"
+                                className={`block w-full rounded-full bg-gray-100 px-4 py-3 text-center text-[15px] font-semibold text-black hover:bg-gray-200 ${focusRingClass}`}
                             >
                                 Sign in
                             </Link>
                             <Link
                                 to="/signup"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="block w-full rounded-full bg-[#0052ff] px-4 py-3 text-center text-[15px] font-semibold text-white hover:bg-[#0047df]"
+                                className={`block w-full rounded-full bg-[#0052ff] px-4 py-3 text-center text-[15px] font-semibold text-white hover:bg-[#0047df] ${focusRingClass}`}
                             >
                                 Sign up
                             </Link>

@@ -30,25 +30,25 @@ const MarketStats = ({ statsCards }) => {
         </div>
       </div>
 
-      <div className="mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="mt-6 md:mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {statsCards.map((card) => (
           <div
             key={card.title}
-            className="rounded-[20px] md:rounded-[24px] bg-[#f1f3f5] px-4 md:px-5 py-4"
+            className="rounded-[16px] bg-[#f1f3f5] px-3 py-3 sm:rounded-[20px] sm:px-4 sm:py-4 md:rounded-[24px] md:px-5"
           >
-            <p className="text-[13px] text-[#5b616e]">{card.title}</p>
+            <p className="text-[12px] leading-tight text-[#5b616e] sm:text-[13px]">{card.title}</p>
 
-            <div className="mt-2 flex items-center gap-2 text-[13px] font-semibold text-black">
+            <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] font-semibold text-black sm:text-[13px]">
               <span>{card.value}</span>
               <span className={card.changeColor}>{card.change}</span>
             </div>
 
-            <div className="mt-4 md:mt-5">
+            <div className="mt-3 sm:mt-4 md:mt-5">
               <img
                 src={card.chart}
                 alt={card.title}
                 loading="lazy"
-                className="h-[60px] md:h-[80px] w-full object-contain"
+                className="h-[52px] w-full object-contain sm:h-[60px] md:h-[80px]"
               />
             </div>
           </div>

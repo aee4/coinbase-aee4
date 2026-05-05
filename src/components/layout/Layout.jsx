@@ -1,6 +1,7 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import WarningBanner from "../common/WarningBanner";
+import CookieConsent from "../common/CookieConsent";
 import { Outlet } from "react-router-dom";
 
 function Layout() {
@@ -16,6 +17,8 @@ function Layout() {
       </main>
 
       <Footer />
+
+      <CookieConsent />
 
     </div>
   );

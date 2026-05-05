@@ -21,7 +21,7 @@ function MarketCard({ coinsByTab = {}, initialTab = "new", isLoading = false }) 
   return (
     <div className="w-full max-w-[680px] rounded-[28px] bg-black px-4 py-5 text-white sm:rounded-[34px] sm:px-7 sm:py-7 lg:rounded-[40px] lg:px-10 lg:py-9">
       {/* Tabs */}
-      <div className="-mx-1 flex flex-nowrap items-center gap-2 overflow-x-auto px-1 pb-1 text-[14px] font-medium [scrollbar-width:none] sm:gap-3 sm:text-[16px] lg:gap-4 lg:text-[18px] [&::-webkit-scrollbar]:hidden">
+      <div className="-mx-1 flex flex-nowrap items-center gap-1 px-1 pb-1 text-[11px] font-medium sm:gap-3 sm:text-[16px] lg:gap-4 lg:text-[18px]">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
 
@@ -30,7 +30,7 @@ function MarketCard({ coinsByTab = {}, initialTab = "new", isLoading = false }) 
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-none whitespace-nowrap rounded-full px-4 py-2.5 transition sm:px-5 sm:py-3 lg:px-6 ${
+              className={`min-w-0 flex-1 whitespace-nowrap rounded-full px-2 py-2.5 transition sm:flex-none sm:px-5 sm:py-3 lg:px-6 ${
                 isActive ? "bg-[#23262d] text-white" : "text-white hover:bg-[#181b20]"
               }`}
             >
@@ -39,10 +39,6 @@ function MarketCard({ coinsByTab = {}, initialTab = "new", isLoading = false }) 
           );
         })}
       </div>
-
-      <p className="mt-4 text-[12px] font-medium uppercase tracking-[0.08em] text-[#8b93a6] sm:mt-5 sm:text-[13px]">
-        {activeTabDetails.label} - {coins.length} {coins.length === 1 ? "asset" : "assets"}
-      </p>
 
       {/* Coin list */}
       <div className="mt-6 space-y-4 sm:mt-8 sm:space-y-6 lg:mt-10 lg:space-y-7">
